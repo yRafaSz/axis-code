@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07110f" />
+  <link rel="icon" href="data:," />
+  <title>Axis Code — Engenharia de software com IA</title>
+  <meta name="description" content="Assistente de programação com IA, foco em Java e suporte a múltiplas linguagens." />
+  <link rel="stylesheet" href="styles.css?v=10.9" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="brand-row">
+        <a class="brand" href="#" aria-label="Axis Code — início">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span>AXIS<span class="brand-muted">/CODE</span></span>
+        </a>
+        <button class="icon-button sidebar-close" id="sidebarClose" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <button class="new-chat" id="newChatButton">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Novo workspace</span>
+        <kbd>Ctrl K</kbd>
+      </button>
+
+      <nav class="nav-stack" aria-label="Ferramentas">
+        <p class="nav-label">WORKSPACE</p>
+        <button class="nav-item active" data-view="chat">
+          <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+          <span>Code chat</span><span class="status-dot"></span>
+        </button>
+        <button class="nav-item" data-workflow="project" data-prompt="Quero criar um projeto profissional. Primeiro me pergunte, de forma objetiva, qual é o produto, usuários, plataforma, linguagem preferida, banco de dados e requisitos indispensáveis. Depois proponha arquitetura, estrutura de pastas, implementação e testes.">
+          <svg viewBox="0 0 24 24"><path d="m14 2-1 7h7l-10 13 1-8H4z"/></svg>
+          <span>Gerar projeto</span>
+        </button>
+        <button class="nav-item" data-workflow="review" data-prompt="Faça uma revisão técnica profissional dos arquivos anexados ou do código que enviarei. Priorize falhas críticas, bugs, segurança, concorrência, performance, compatibilidade e manutenibilidade. Para cada achado, apresente impacto, causa e correção concreta.">
+          <svg viewBox="0 0 24 24"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/></svg>
+          <span>Revisar código</span>
+        </button>
+        <button class="nav-item" data-workflow="debug" data-prompt="Atue como especialista em diagnóstico. Analise o erro, reproduza mentalmente o fluxo, identifique a causa raiz e proponha a menor correção segura. Peça logs, stack trace, versões e código somente se forem indispensáveis.">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg>
+          <span>Debug profundo</span>
+        </button>
+      </nav>
+
+      <section class="history-section">
+        <div class="section-heading"><p class="nav-label">RECENTES</p><button id="clearHistory" aria-label="Limpar histórico" title="Limpar histórico">Limpar</button></div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <div class="sidebar-footer">
+        <div class="profile-row">
+          <div class="avatar">R</div>
+          <div><strong>Seu workspace</strong><small>Ambiente privado</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-stage">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="ai-counter" id="aiCounter" title="Estado das IAs internas">
+          <span class="ai-counter-led" id="aiCounterLed"></span>
+          <span><small>ENSEMBLE</small><strong id="activeModelLabel">Verificando IAs…</strong></span>
+        </div>
+        <div class="top-actions">
+          <span class="java-focus"><i></i> JAVA FIRST</span>
+          <button class="icon-button" id="clearChat" aria-label="Limpar conversa" title="Limpar conversa">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="chat-area" id="chatArea">
+        <div class="empty-state" id="emptyState">
+          <div class="hero-kicker"><span></span> ENGENHARIA DE SOFTWARE AUMENTADA</div>
+          <h1>Construa além<br/>do <em>óbvio.</em></h1>
+          <p>Um copiloto técnico que pensa em arquitetura, segurança e performance antes de escrever a primeira linha.</p>
+
+          <div class="capability-grid">
+            <button class="capability-card featured" data-prompt="Crie a arquitetura de uma API REST profissional com Java 21, Spring Boot 3, autenticação JWT, PostgreSQL, testes e Docker. Explique as decisões e gere os arquivos principais.">
+              <span class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2 5 6v12l7 4 7-4V6zM5 6l7 4 7-4M12 10v12"/></svg></span>
+              <span><small>ESPECIALIDADE</small><strong>Arquitetura Java</strong><p>Spring Boot, APIs, plugins, microsserviços e sistemas escaláveis.</p></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="capability-card" data-prompt="Analise o código que vou enviar procurando bugs, vulnerabilidades, gargalos, problemas de concorrência e oportunidades de refatoração. Aguarde o código.">
+              <span class="card-icon coral"><svg viewBox="0 0 24 24"><path d="m9 18-6-6 6-6M15 6l6 6-6 6M14 3l-4 18"/></svg></span>
+              <span><small>ANÁLISE</small><strong>Code review rigoroso</strong><p>Bugs, segurança, complexidade e correções prontas para produção.</p></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="capability-card" data-prompt="Crie um plano e a estrutura inicial para uma aplicação full-stack moderna. Use Java no backend e HTML, CSS e JavaScript no frontend, com design responsivo e acessível.">
+              <span class="card-icon blue"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg></span>
+              <span><small>FULL-STACK</small><strong>Do backend à interface</strong><p>Java, PHP, HTML, CSS, JS, SQL, Python e muito mais.</p></span>
+              <span class="arrow">↗</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="messages" id="messages" aria-live="polite"></div>
+
+        <button class="scroll-bottom" id="scrollBottom" type="button" aria-label="Ir para a mensagem mais recente" title="Ir para o final">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </button>
+      </section>
+
+      <footer class="composer-wrap">
+        <form class="composer" id="promptForm">
+          <div class="attachment-list" id="attachmentList" aria-live="polite"></div>
+          <textarea id="promptInput" rows="1" placeholder="Descreva o que você quer construir ou cole seu código…" aria-label="Mensagem para a IA"></textarea>
+          <div class="composer-toolbar">
+            <div class="tool-group">
+              <button type="button" class="tool-button" id="attachButton" title="Anexar arquivo">
+                <svg viewBox="0 0 24 24"><path d="m21.4 11.6-8.5 8.5a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg><span>Anexar</span>
+              </button>
+              <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.csv,.json,.jsonl,.xml,.yaml,.yml,.toml,.ini,.env,.properties,.log,.pdf,.docx,.rtf,.xlsx,.xls,.xlsb,.ods,.pptx,.odt,.odp,.zip,.jar,.java,.kt,.kts,.groovy,.gradle,.php,.html,.htm,.css,.scss,.sass,.less,.js,.mjs,.cjs,.jsx,.ts,.tsx,.vue,.svelte,.py,.rb,.go,.rs,.c,.h,.cpp,.hpp,.cs,.swift,.dart,.sql,.sh,.bat,.ps1,.dockerfile" />
+              <button type="button" class="auto-zip-toggle" id="autoZipToggle" title="Ativar geração automática de ZIP" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M4 3h10l6 6v12H4zM14 3v6h6M9 7h2M9 11h2M9 15h2M8 19h4v-4H8z"/></svg>
+                <span class="auto-zip-label">ZIP</span><span class="toggle-track"><i></i></span>
+              </button>
+            </div>
+            <div class="send-group">
+              <span id="charCount">0 / 32k</span>
+              <button type="submit" class="send-button" id="sendButton" aria-label="Enviar mensagem">
+                <svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+        <p class="composer-note">A IA pode cometer erros. Revise o código antes de usar em produção.</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="mavenPermissionModal" hidden>
+    <section class="settings-modal permission-modal" role="dialog" aria-modal="true" aria-labelledby="mavenPermissionTitle">
+      <header>
+        <div><span class="eyebrow">FERRAMENTA LOCAL</span><h2 id="mavenPermissionTitle">Permitir o uso do Maven?</h2><p>A execução só acontecerá desta vez e após sua autorização.</p></div>
+      </header>
+      <div class="permission-command"><span>OPERAÇÃO SOLICITADA</span><code id="mavenCommandPreview">mvn test</code></div>
+      <label class="permission-path">Pasta do projeto Maven
+        <input id="mavenProjectPath" type="text" autocomplete="off" placeholder="C:\caminho\do\projeto" />
+        <small>A pasta precisa conter um arquivo pom.xml.</small>
+      </label>
+      <div class="permission-warning">
+        <svg viewBox="0 0 24 24"><path d="M12 3 2 21h20zM12 9v5M12 18h.01"/></svg>
+        <p>Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.</p>
+      </div>
+      <p class="maven-run-status" id="mavenRunStatus"></p>
+      <div class="settings-actions">
+        <button type="button" class="secondary-button" id="denyMaven">Não permitir</button>
+        <button type="button" class="primary-button" id="allowMaven">Permitir uma vez</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=11.0"></script>
+</body>
+</html>

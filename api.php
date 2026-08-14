@@ -367,7 +367,24 @@ function chat(): void {
     }
 
     $candidates = call_parallel($selected, $payload);
-    if (!$candidates) respond(502, ['error' => 'Todas as chamadas ao OpenRouter falharam.']);
+    // Nem todo provedor/modelo gratuito aceita bem chamadas simultâneas.  Em vez
+    // de encerrar o pedido médio/grande, faça a mesma tentativa sequencial e
+    // com streaming que já é usada como modo compatível em hospedagens simples.
+    // Assim, um agente indisponível não derruba o chat inteiro.
+    if (!$candidates) {
+        $fallback = call_first_available($agents, $payload, $profile[3], $profile[4]);
+        if (!$fallback['ok']) respond(502, ['error' => $fallback['error']]);
+        respond(200, [
+            'choices' => [['message' => ['role' => 'assistant', 'content' => $fallback['content']]]],
+            'axis' => [
+                'strategy' => 'parallel-fallback',
+                'candidates' => 1,
+                'requestedAgents' => $classification['agents'],
+                'complexity' => $classification['complexity'],
+                'partial' => !empty($fallback['partial'])
+            ]
+        ]);
+    }
     if (count($candidates) === 1) respond(200, ['choices' => [['message' => ['role' => 'assistant', 'content' => $candidates[0]]]], 'axis' => ['strategy' => 'single-fallback', 'candidates' => 1, 'complexity' => $classification['complexity']]]);
 
     $latest = '';

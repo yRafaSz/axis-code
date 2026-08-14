@@ -1,6 +1,6 @@
 # Axis Code AI no Render
 
-Esta versão usa Docker para executar PHP 8.3, cURL, Java 17 e Maven. As chaves ficam no painel do Render, nunca no repositório ou no navegador.
+Esta versão usa Docker para executar PHP 8.3 e cURL. As chaves ficam no painel do Render, nunca no repositório ou no navegador.
 
 ## Publicar no Render
 
@@ -24,7 +24,7 @@ Esta versão usa Docker para executar PHP 8.3, cURL, Java 17 e Maven. As chaves 
 
 ## Maven
 
-O container possui Java 17 e Maven, permitindo implementar um executor isolado em uma próxima etapa. O endpoint atual continua bloqueando execução remota por segurança: não exponha um comando Maven arbitrário em um site público.
+O site mantém a autorização visual do Maven, mas a execução remota permanece bloqueada por segurança. Para habilitá-la no Render, o correto é criar um worker isolado com Java/Maven e uma área temporária por tarefa; não exponha comandos Maven arbitrários no mesmo servidor público do chat.
 
 ## Desenvolvimento local
 

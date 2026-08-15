@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" href="axis-preview.png" />
   <title>Axis Code — Engenharia de software com IA</title>
   <meta name="description" content="Assistente de programação com IA, foco em Java e suporte a múltiplas linguagens." />
-  <link rel="stylesheet" href="styles.css?v=12.1" />
+  <link rel="stylesheet" href="styles.css?v=12.4" />
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -243,6 +243,19 @@
     </section>
   </div>
 
+  <div class="modal-backdrop" id="titleEditorModal" hidden>
+    <section class="settings-modal title-editor-modal" role="dialog" aria-modal="true" aria-labelledby="titleEditorHeading">
+      <header>
+        <div><span class="eyebrow">CONVERSA</span><h2 id="titleEditorHeading" data-i18n="editTitle">Editar título</h2><p data-i18n="editTitleDescription">Use um nome curto e claro para identificar esta conversa.</p></div>
+        <button class="icon-button modal-close" id="closeTitleEditor" type="button" aria-label="Fechar">×</button>
+      </header>
+      <form id="titleEditorForm" class="title-editor-form">
+        <label><span data-i18n="conversationTitle">Título da conversa</span><input id="conversationTitleInput" type="text" minlength="3" maxlength="60" required autocomplete="off" /></label>
+        <div class="settings-actions"><button type="button" class="secondary-button" id="cancelTitleEditor" data-i18n="cancel">Cancelar</button><button type="submit" class="primary-button" data-i18n="saveTitle">Salvar título</button></div>
+      </form>
+    </section>
+  </div>
+
   <div class="modal-backdrop" id="confirmModal" hidden>
     <section class="settings-modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
       <span class="eyebrow" data-i18n="confirmation">CONFIRMAÇÃO</span><h2 id="confirmTitle">Confirmar ação</h2><p id="confirmMessage"></p>
@@ -251,6 +264,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=12.1"></script>
+  <script src="app.js?v=12.4"></script>
 </body>
 </html>

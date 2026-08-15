@@ -62,6 +62,8 @@ CONTRATO DE FORMATAÇÃO:
 PROJETOS COMPLETOS:
 - Entregue uma base executável com todos os arquivos indispensáveis: código, configuração, dependências, persistência, tratamento de erros, documentação mínima e testes proporcionais ao pedido.
 - Não prometa arquivos que não serão entregues. Não omita arquivos necessários para compilar, iniciar ou compreender o projeto.
+- Quando o usuário fornecer uma lista explícita de arquivos ou entregáveis, priorize exatamente essa lista e não aumente o escopo com arquivos opcionais. Use explicações curtas para reservar a saída ao código completo.
+- Planeje silenciosamente todos os arquivos antes de começar e produza cada arquivo uma única vez. Não reescreva arquivos já concluídos durante continuações.
 - Para Java, mantenha groupId, artifactId, package, versão do JDK, framework e dependências compatíveis. Prefira imports explícitos quando reduzirem ambiguidades.
 - Termine somente quando todos os requisitos e arquivos prometidos estiverem presentes.
 
@@ -75,7 +77,7 @@ SEGURANÇA E AMBIENTE:
 - Esta hospedagem PHP compartilhada não executa Maven. Você pode criar/revisar pom.xml e informar comandos para execução local, mas nunca afirme que executou Maven.
 
 PROTOCOLOS INTERNOS:
-- Quando houver PRIMEIRA_RESPOSTA, gere um título específico de 3 a 7 palavras baseado no objetivo real da conversa, não apenas nas primeiras palavras. Evite “Ajuda com código”, “Nova conversa” e títulos genéricos. Acrescente somente no final: [[CONVERSATION_TITLE:Título criado]]. Não explique a marca.
+- Quando houver PRIMEIRA_RESPOSTA, gere um título específico de 3 a 7 palavras que resuma o resultado ou a ação técnica principal. Ignore completamente saudações, pedidos de persona como “atue como desenvolvedor”, frases de cortesia, formato de entrega e detalhes secundários. Prefira títulos como “Criar API de Pagamentos”, “Corrigir Autenticação no TiDB” ou “Otimizar Consultas do Relatório”. O título nunca deve copiar o começo do pedido nem conter “quero”, “preciso”, “faça”, “atue como”, “me ajude”, “prompt” ou “solicitação”. Acrescente somente no final: [[CONVERSATION_TITLE:Título criado]]. Não explique a marca.
 - Quando houver MODO AUTO ZIP ATIVO, entregue o conteúdo completo de cada arquivo criado ou alterado e respeite exatamente o marcador de caminho solicitado. Não inclua arquivos não alterados.`;
 
 const translations = {
@@ -87,7 +89,7 @@ const translations = {
     heroKicker: 'ENGENHARIA DE SOFTWARE AUMENTADA', heroTitle: 'Construa além<br/>do <em>óbvio.</em>', heroDescription: 'Um agente técnico que analisa arquitetura, segurança, desempenho e manutenção antes de escrever a primeira linha.',
     buildLabel: 'CONSTRUIR', buildTitle: 'Sistema completo', buildDescription: 'Arquitetura, implementação, banco, segurança, testes e implantação.', diagnoseLabel: 'DIAGNOSTICAR', diagnoseTitle: 'Corrigir com precisão', diagnoseDescription: 'Causa raiz, evidências, regressões e correções prontas para produção.', evolveLabel: 'EVOLUIR', evolveTitle: 'Projeto existente', evolveDescription: 'Novas funcionalidades sem quebrar contratos, dados ou compatibilidade.',
     aiDisclaimer: 'A IA pode cometer erros. Revise o código antes de usar em produção.', account: 'CONTA', myAccount: 'Minha conta', accountDescription: 'Atualize sua foto, nome e senha. O e-mail não pode ser alterado.', changePhoto: 'Alterar foto', photoLimit: 'JPG, PNG, WEBP ou GIF, até 2 MB.', emailImmutable: 'E-mail (não pode ser alterado)', currentPassword: 'Senha atual', newPassword: 'Nova senha', logout: 'Sair da conta', cancel: 'Cancelar', saveChanges: 'Salvar alterações',
-    appearance: 'APARÊNCIA', chooseTheme: 'Escolha um tema', themeDescription: 'Os temas alteram toda a interface. Um fundo personalizado altera somente a conversa.', themeAxis: 'Verde técnico', themeAurora: 'Violeta e ciano', themeMidnight: 'Azul profundo', themeGraphite: 'Cinza minimalista', customBackground: 'Fundo personalizado', customBackgroundDescription: 'Escolha uma imagem de até 2 MB para a área de conversa.', chooseImage: 'Escolher imagem', removeBackground: 'Remover fundo', confirmation: 'CONFIRMAÇÃO', confirm: 'Confirmar', attach: 'Anexar', localTool: 'FERRAMENTA LOCAL', allowMavenTitle: 'Permitir o uso do Maven?', allowMavenDescription: 'A execução só acontecerá desta vez e após sua autorização.', requestedOperation: 'OPERAÇÃO SOLICITADA', mavenFolder: 'Pasta do projeto Maven', mavenFolderHint: 'A pasta precisa conter um arquivo pom.xml.', mavenWarning: 'Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.', deny: 'Não permitir', allowOnce: 'Permitir uma vez'
+    appearance: 'APARÊNCIA', chooseTheme: 'Escolha um tema', themeDescription: 'Os temas alteram toda a interface. Um fundo personalizado altera somente a conversa.', themeAxis: 'Verde técnico', themeAurora: 'Violeta e ciano', themeMidnight: 'Azul profundo', themeGraphite: 'Cinza minimalista', customBackground: 'Fundo personalizado', customBackgroundDescription: 'Escolha uma imagem de até 2 MB para a área de conversa.', chooseImage: 'Escolher imagem', removeBackground: 'Remover fundo', confirmation: 'CONFIRMAÇÃO', confirm: 'Confirmar', attach: 'Anexar', localTool: 'FERRAMENTA LOCAL', allowMavenTitle: 'Permitir o uso do Maven?', allowMavenDescription: 'A execução só acontecerá desta vez e após sua autorização.', requestedOperation: 'OPERAÇÃO SOLICITADA', mavenFolder: 'Pasta do projeto Maven', mavenFolderHint: 'A pasta precisa conter um arquivo pom.xml.', mavenWarning: 'Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.', deny: 'Não permitir', allowOnce: 'Permitir uma vez', editTitle: 'Editar título', editTitleDescription: 'Use um nome curto e claro para identificar esta conversa.', conversationTitle: 'Título da conversa', saveTitle: 'Salvar título'
   },
   en: {
     language: 'Language', authHeadline: 'Your professional coding environment.', authDescription: 'Sign in to access your conversations, preferences, and AI software engineering tools.',
@@ -97,7 +99,7 @@ const translations = {
     heroKicker: 'AUGMENTED SOFTWARE ENGINEERING', heroTitle: 'Build beyond<br/>the <em>obvious.</em>', heroDescription: 'A technical agent that considers architecture, security, performance, and maintenance before writing the first line.',
     buildLabel: 'BUILD', buildTitle: 'Complete system', buildDescription: 'Architecture, implementation, database, security, tests, and deployment.', diagnoseLabel: 'DIAGNOSE', diagnoseTitle: 'Fix precisely', diagnoseDescription: 'Root cause, evidence, regressions, and production-ready fixes.', evolveLabel: 'EVOLVE', evolveTitle: 'Existing project', evolveDescription: 'New features without breaking contracts, data, or compatibility.',
     aiDisclaimer: 'AI can make mistakes. Review code before using it in production.', account: 'ACCOUNT', myAccount: 'My account', accountDescription: 'Update your photo, name, and password. Email cannot be changed.', changePhoto: 'Change photo', photoLimit: 'JPG, PNG, WEBP, or GIF, up to 2 MB.', emailImmutable: 'Email (cannot be changed)', currentPassword: 'Current password', newPassword: 'New password', logout: 'Sign out', cancel: 'Cancel', saveChanges: 'Save changes',
-    appearance: 'APPEARANCE', chooseTheme: 'Choose a theme', themeDescription: 'Themes change the entire interface. A custom background changes only the conversation area.', themeAxis: 'Technical green', themeAurora: 'Violet and cyan', themeMidnight: 'Deep blue', themeGraphite: 'Minimal graphite', customBackground: 'Custom background', customBackgroundDescription: 'Choose an image up to 2 MB for the conversation area.', chooseImage: 'Choose image', removeBackground: 'Remove background', confirmation: 'CONFIRMATION', confirm: 'Confirm', attach: 'Attach', localTool: 'LOCAL TOOL', allowMavenTitle: 'Allow Maven usage?', allowMavenDescription: 'Execution will only happen this time and after your approval.', requestedOperation: 'REQUESTED OPERATION', mavenFolder: 'Maven project folder', mavenFolderHint: 'The folder must contain a pom.xml file.', mavenWarning: 'Maven projects can run plugins and code during the build. Only approve projects you trust.', deny: 'Deny', allowOnce: 'Allow once'
+    appearance: 'APPEARANCE', chooseTheme: 'Choose a theme', themeDescription: 'Themes change the entire interface. A custom background changes only the conversation area.', themeAxis: 'Technical green', themeAurora: 'Violet and cyan', themeMidnight: 'Deep blue', themeGraphite: 'Minimal graphite', customBackground: 'Custom background', customBackgroundDescription: 'Choose an image up to 2 MB for the conversation area.', chooseImage: 'Choose image', removeBackground: 'Remove background', confirmation: 'CONFIRMATION', confirm: 'Confirm', attach: 'Attach', localTool: 'LOCAL TOOL', allowMavenTitle: 'Allow Maven usage?', allowMavenDescription: 'Execution will only happen this time and after your approval.', requestedOperation: 'REQUESTED OPERATION', mavenFolder: 'Maven project folder', mavenFolderHint: 'The folder must contain a pom.xml file.', mavenWarning: 'Maven projects can run plugins and code during the build. Only approve projects you trust.', deny: 'Deny', allowOnce: 'Allow once', editTitle: 'Edit title', editTitleDescription: 'Use a short and clear name to identify this conversation.', conversationTitle: 'Conversation title', saveTitle: 'Save title'
   }
 };
 
@@ -124,6 +126,8 @@ function automaticProfile(text) {
   const files = (text.match(/--- INÍCIO DO ARQUIVO:/g) || []).length;
   const complexityTerms = (text.match(/arquitetura|projeto completo|sistema completo|refator|migraç|vulnerabilidade|concorrência|causa raiz|sistema distribuído|microsservi|código legado/gi) || []).length;
   const criticalRisk = /autenticaç|autorizaç|pagamento|criptograf|corrupção de dados|perda de dados|operaç(?:ão|ões) destrutiva|produção|código nativo|memory leak|race condition/iu.test(text);
+  const completeBuild = /(?:crie|criar|desenvolva|desenvolver|gere|construa|implemente).{0,120}(?:plugin|projeto|sistema|aplicaç|api|site|bot).{0,180}(?:complet|todas?\s+as\s+classes|todos?\s+os\s+arquivos)|entregável\s*:?.{0,180}(?:classes|arquivos|plugin\.yml|config\.yml)/isu.test(text);
+  if (completeBuild) return automaticProfiles.heavy;
   if (criticalRisk || files >= 6 || complexityTerms >= 3 || (files >= 3 && complexityTerms >= 1)) return automaticProfiles.heavy;
   if (files >= 2 || complexityTerms >= 1 || text.length > 12_000) return automaticProfiles.medium;
   return automaticProfiles.light;
@@ -558,20 +562,49 @@ function historyStorageKey() {
 }
 
 function loadHistory() {
-  try { return JSON.parse(localStorage.getItem(historyStorageKey())) || []; }
+  try {
+    const records = JSON.parse(localStorage.getItem(historyStorageKey())) || [];
+    return records
+      .filter(record => record && record.id)
+      .map(record => {
+        const firstMessage = Array.isArray(record.messages) ? record.messages.find(message => message.role === 'user') : null;
+        const source = firstMessage?.displayContent || firstMessage?.content || '';
+        const title = !record.titleEdited && isLowQualityTitle(record.title)
+          ? createFallbackTitle(source)
+          : sanitizeConversationTitle(record.title) || createFallbackTitle(source);
+        return { ...record, title, pinned: Boolean(record.pinned), titleEdited: Boolean(record.titleEdited) };
+      })
+      .sort((a, b) => Number(b.pinned) - Number(a.pinned) || Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+  }
   catch { return []; }
+}
+
+function storeHistory(records) {
+  const sorted = [...records]
+    .sort((a, b) => Number(b.pinned) - Number(a.pinned) || Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
+    .slice(0, 20);
+  localStorage.setItem(historyStorageKey(), JSON.stringify(sorted));
+  return sorted;
 }
 
 function saveCurrentConversation(force = false) {
   if (!state.messages.length && !force) return;
   const history = loadHistory();
+  const existing = history.find(item => item.id === state.conversationId);
   const firstMessage = state.messages.find(message => message.role === 'user');
   const first = firstMessage?.displayContent || firstMessage?.content || 'Nova conversa';
   const defaultTitle = state.preferences.language === 'en' ? 'New conversation' : 'Nova conversa';
-  const record = { id: state.conversationId, title: state.conversationTitle || (state.messages.length ? createFallbackTitle(first) : defaultTitle), updatedAt: Date.now(), messages: state.messages };
-  const records = [record, ...history.filter(item => item.id !== record.id)].slice(0, 20);
+  const record = {
+    id: state.conversationId,
+    title: sanitizeConversationTitle(state.conversationTitle) || (state.messages.length ? createFallbackTitle(first) : defaultTitle),
+    titleEdited: Boolean(existing?.titleEdited),
+    pinned: Boolean(existing?.pinned),
+    updatedAt: Date.now(),
+    messages: state.messages
+  };
+  const records = [record, ...history.filter(item => item.id !== record.id)];
   try {
-    localStorage.setItem(historyStorageKey(), JSON.stringify(records));
+    storeHistory(records);
   } catch {
     try { localStorage.setItem(historyStorageKey(), JSON.stringify(records.slice(0, 5))); }
     catch { showToast('Conversa grande demais para o histórico local'); }
@@ -579,22 +612,90 @@ function saveCurrentConversation(force = false) {
   renderHistory();
 }
 
-function createFallbackTitle(text) {
-  const clean = String(text || '')
-    .split(/\n\n(?:ARQUIVOS ANEXADOS|PROFUNDIDADE DEFINIDA|NÍVEL DE ANÁLISE):/i)[0]
-    .replace(/```[\s\S]*?```/g, ' código ')
+function sanitizeConversationTitle(value) {
+  return String(value || '')
+    .replace(/\[\[.*?\]\]/g, '')
+    .replace(/["'`*_#<>]/g, '')
     .replace(/\s+/g, ' ')
-    .replace(/^(por favor|preciso que|quero que|pode|faça|crie|me ajude a|analise)\s+/i, '')
-    .trim();
-  if (!clean) return 'Conversa técnica';
-  const title = clean.split(' ').slice(0, 7).join(' ');
-  return title.charAt(0).toUpperCase() + title.slice(1, 52);
+    .replace(/^[\s.,:;!?—-]+|[\s.,:;!?—-]+$/g, '')
+    .trim()
+    .slice(0, 60);
 }
 
-function extractConversationTitle(answer) {
+function isLowQualityTitle(title) {
+  const clean = sanitizeConversationTitle(title);
+  if (!clean || /^(nova conversa|new conversation|conversa técnica|technical conversation)$/i.test(clean)) return true;
+  if (/^(por favor|atue|aja|comporte-se|quero|preciso|gostaria|pode|poderia|faça|me ajude|você deve|you are|act as|please|i want|i need|could you)\b/i.test(clean)) return true;
+  return clean.split(/\s+/).length > 8 || clean.length > 58;
+}
+
+function createFallbackTitle(text) {
+  let clean = String(text || '')
+    .split(/\n\n(?:ARQUIVOS ANEXADOS|PROFUNDIDADE DEFINIDA|NÍVEL DE ANÁLISE):/i)[0]
+    .replace(/```[\s\S]*?```/g, ' código ')
+    .replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const english = state.preferences.language === 'en';
+  if (!clean) return english ? 'Technical conversation' : 'Conversa técnica';
+
+  const actionWords = english
+    ? 'create|build|develop|implement|fix|repair|solve|add|include|remove|delete|analyze|review|optimize|configure|explain|migrate|update|change|refactor|debug'
+    : 'crie|criar|desenvolva|desenvolver|implemente|implementar|faça|fazer|corrija|corrigir|arrume|conserte|resolva|adicione|adicionar|inclua|remova|remover|apague|analise|analisar|revise|revisar|otimize|otimizar|configure|configurar|explique|explicar|migre|migrar|atualize|atualizar|altere|alterar|refatore|refatorar|depure';
+  const rolePrefix = english
+    ? /^(?:please\s+)?(?:act|work|behave)\s+as\b.*?(?=\b(?:create|build|develop|implement|fix|repair|solve|add|remove|analyze|review|optimize|configure|explain|migrate|update|change|refactor|debug)\b)/i
+    : new RegExp(`^(?:por favor\\s+)?(?:atue|aja|trabalhe|comporte-se)\\s+como\\b.*?(?=\\b(?:${actionWords})\\b)`, 'i');
+  clean = clean.replace(rolePrefix, '').trim();
+  clean = clean
+    .replace(/^(?:por favor|please)[,\s]+/i, '')
+    .replace(/^(?:eu\s+)?(?:quero|preciso|gostaria)(?:\s+que|\s+de)?\s+/i, '')
+    .replace(/^(?:i\s+)?(?:want|need|would like)(?:\s+you\s+to|\s+to)?\s+/i, '')
+    .replace(/^(?:você|voce|you)\s+/i, '')
+    .replace(/^(?:pode|poderia|could you|can you)\s+/i, '')
+    .replace(/^me ajude a\s+/i, '')
+    .trim();
+
+  const actions = english
+    ? [
+        [/^(?:create|build|develop)\s+/i, 'Build'], [/^implement\s+/i, 'Implement'], [/^(?:fix|repair|solve|debug)\s+/i, 'Fix'],
+        [/^(?:add|include)\s+/i, 'Add'], [/^(?:remove|delete)\s+/i, 'Remove'], [/^(?:analyze|review)\s+/i, 'Review'],
+        [/^optimize\s+/i, 'Optimize'], [/^configure\s+/i, 'Configure'], [/^explain\s+/i, 'Explain'], [/^migrate\s+/i, 'Migrate'],
+        [/^(?:update|change)\s+/i, 'Update'], [/^refactor\s+/i, 'Refactor']
+      ]
+    : [
+        [/^(?:crie|criar|desenvolva|desenvolver|faça|fazer)\s+/i, 'Criar'], [/^(?:implemente|implementar)\s+/i, 'Implementar'],
+        [/^(?:corrija|corrigir|arrume|conserte|resolva|depure)\s+/i, 'Corrigir'], [/^(?:adicione|adicionar|inclua)\s+/i, 'Adicionar'],
+        [/^(?:remova|remover|apague)\s+/i, 'Remover'], [/^(?:analise|analisar|revise|revisar)\s+/i, 'Revisar'],
+        [/^(?:otimize|otimizar)\s+/i, 'Otimizar'], [/^(?:configure|configurar)\s+/i, 'Configurar'], [/^(?:explique|explicar)\s+/i, 'Explicar'],
+        [/^(?:migre|migrar)\s+/i, 'Migrar'], [/^(?:atualize|atualizar|altere|alterar)\s+/i, 'Atualizar'], [/^(?:refatore|refatorar)\s+/i, 'Refatorar']
+      ];
+  let action = '';
+  for (const [pattern, label] of actions) {
+    if (pattern.test(clean)) {
+      action = label;
+      clean = clean.replace(pattern, '');
+      break;
+    }
+  }
+
+  clean = clean
+    .replace(/^(?:um|uma|o|a|os|as|an?|the)\s+/i, '')
+    .split(/[,;.!?]|\s+(?:e depois|depois disso|além disso|and then|after that|also)\s+/i)[0]
+    .replace(/\b(?:por favor|completo|completa|profissional|extremamente|bem feito|bem feita)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const subject = clean.split(/\s+/).filter(Boolean).slice(0, action ? 6 : 7).join(' ')
+    .replace(/\s+(?:e|ou|com|para|de|do|da|dos|das|and|or|with|for|of|to)$/i, '');
+  let title = sanitizeConversationTitle(`${action} ${subject}`);
+  if (!title) title = english ? 'Technical conversation' : 'Conversa técnica';
+  return title.charAt(0).toUpperCase() + title.slice(1);
+}
+
+function extractConversationTitle(answer, sourcePrompt = '') {
   const match = answer.match(/\[\[CONVERSATION_TITLE:\s*([^\]\n]{3,80})\s*\]\]/i);
   if (!match) return { title: '', content: answer };
-  const title = match[1].replace(/["'`*_#]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  const candidate = sanitizeConversationTitle(match[1]);
+  const title = isLowQualityTitle(candidate) ? createFallbackTitle(sourcePrompt) : candidate;
   return { title, content: answer.replace(match[0], '').trim() };
 }
 
@@ -616,21 +717,88 @@ function renderHistory() {
   list.innerHTML = '';
   history.forEach(item => {
     const row = document.createElement('div');
-    row.className = 'history-row';
+    row.className = `history-row${item.pinned ? ' pinned' : ''}`;
     const button = document.createElement('button');
     button.className = 'history-item';
     button.innerHTML = `<span class="history-icon">${escapeHtml(item.title.charAt(0).toUpperCase())}</span><span><strong>${escapeHtml(item.title)}</strong><small>${relativeTime(item.updatedAt)}</small></span>`;
     button.addEventListener('click', () => loadConversation(item.id));
+
+    const actions = document.createElement('div');
+    actions.className = 'history-actions';
+    const pin = document.createElement('button');
+    pin.className = `history-action history-pin${item.pinned ? ' active' : ''}`;
+    pin.type = 'button';
+    pin.title = state.preferences.language === 'en' ? (item.pinned ? 'Unpin conversation' : 'Pin conversation') : (item.pinned ? 'Desafixar conversa' : 'Fixar conversa');
+    pin.setAttribute('aria-label', pin.title);
+    pin.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 3 6 6-2 2 4 4-2 2-4-4-2 2-6-6 2-2 4 4 2-2-4-4zM8 16l-5 5"/></svg>';
+    pin.addEventListener('click', () => toggleConversationPin(item.id));
+
+    const edit = document.createElement('button');
+    edit.className = 'history-action history-edit';
+    edit.type = 'button';
+    edit.title = state.preferences.language === 'en' ? 'Edit title' : 'Editar título';
+    edit.setAttribute('aria-label', `${edit.title}: ${item.title}`);
+    edit.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>';
+    edit.addEventListener('click', () => openTitleEditor(item.id));
+
     const remove = document.createElement('button');
-    remove.className = 'history-delete';
+    remove.className = 'history-action history-delete';
     remove.type = 'button';
     remove.title = state.preferences.language === 'en' ? 'Delete this conversation' : 'Apagar esta conversa';
     remove.setAttribute('aria-label', state.preferences.language === 'en' ? `Delete conversation ${item.title}` : `Apagar conversa ${item.title}`);
     remove.textContent = '×';
     remove.addEventListener('click', () => deleteConversation(item.id, item.title));
-    row.append(button, remove);
+    actions.append(pin, edit, remove);
+    row.append(button, actions);
     list.appendChild(row);
   });
+}
+
+function toggleConversationPin(id) {
+  const history = loadHistory();
+  const record = history.find(item => item.id === id);
+  if (!record) return;
+  record.pinned = !record.pinned;
+  try { storeHistory(history); }
+  catch { showToast(state.preferences.language === 'en' ? 'Could not update the conversation.' : 'Não foi possível atualizar a conversa.'); return; }
+  renderHistory();
+  showToast(state.preferences.language === 'en'
+    ? (record.pinned ? 'Conversation pinned' : 'Conversation unpinned')
+    : (record.pinned ? 'Conversa fixada' : 'Conversa desafixada'));
+}
+
+let editingConversationId = null;
+function openTitleEditor(id) {
+  const record = loadHistory().find(item => item.id === id);
+  if (!record) return;
+  editingConversationId = id;
+  $('#conversationTitleInput').value = record.title;
+  $('#titleEditorModal').hidden = false;
+  setTimeout(() => { $('#conversationTitleInput').focus(); $('#conversationTitleInput').select(); }, 40);
+}
+
+function closeTitleEditor() {
+  editingConversationId = null;
+  $('#titleEditorModal').hidden = true;
+}
+
+function saveEditedConversationTitle(value) {
+  const title = sanitizeConversationTitle(value);
+  if (title.length < 3) {
+    showToast(state.preferences.language === 'en' ? 'Use at least 3 characters.' : 'Use pelo menos 3 caracteres.');
+    return false;
+  }
+  const history = loadHistory();
+  const record = history.find(item => item.id === editingConversationId);
+  if (!record) return false;
+  record.title = title;
+  record.titleEdited = true;
+  if (record.id === state.conversationId) state.conversationTitle = title;
+  try { storeHistory(history); }
+  catch { showToast(state.preferences.language === 'en' ? 'Could not save the title.' : 'Não foi possível salvar o título.'); return false; }
+  renderHistory();
+  showToast(state.preferences.language === 'en' ? 'Title updated' : 'Título atualizado');
+  return true;
 }
 
 async function deleteConversation(id, title = '') {
@@ -641,7 +809,7 @@ async function deleteConversation(id, title = '') {
   );
   if (!confirmed) return;
   const next = loadHistory().filter(item => item.id !== id);
-  localStorage.setItem(historyStorageKey(), JSON.stringify(next));
+  storeHistory(next);
   if (state.conversationId === id) resetChat(false);
   renderHistory();
   showToast('Conversa apagada');
@@ -793,13 +961,17 @@ async function requestCompleteAxisAnswer(baseMessages, progress) {
     const result = await requestAxis(requestMessages);
     completeAnswer = mergeContinuation(completeAnswer, result.content);
     if (!result.partial) return finalizeMarkdown(completeAnswer);
-    const continuationContext = completeAnswer.slice(-24000);
+    const continuationContext = completeAnswer.slice(-14000);
+    const deliveredFiles = extractGeneratedFiles(completeAnswer).map(file => file.name);
+    const deliveredNotice = deliveredFiles.length
+      ? `\nARQUIVOS JÁ CONCLUÍDOS — NÃO REPETIR: ${[...new Set(deliveredFiles)].join(', ')}.`
+      : '';
     requestMessages = [
       ...baseMessages,
       { role: 'assistant', content: continuationContext },
       {
         role: 'user',
-        content: 'CONTINUAÇÃO_INTERNA_DE_PROJETO_GRANDE: a mensagem anterior contém o final já entregue. Continue exatamente da última linha, sem repetir nenhum texto ou arquivo anterior. Ainda há conteúdo pendente: entregue diretamente todos os arquivos, códigos, configurações e instruções restantes até o projeto estar completo. Não resuma, não reduza o escopo e não diga que vai continuar depois.'
+        content: `CONTINUAÇÃO_INTERNA_DE_PROJETO_GRANDE: a mensagem anterior contém o final já entregue. Continue exatamente da última linha, sem repetir texto ou arquivo anterior. Entregue diretamente apenas o código e os arquivos restantes, com explicações mínimas, até concluir integralmente a lista solicitada. Não faça novo planejamento e não diga que continuará depois.${deliveredNotice}`
       }
     ];
     part++;
@@ -998,7 +1170,7 @@ async function sendPrompt(prompt) {
     const answer = await requestCompleteAxisAnswer(messagesPayload, progress);
     progress.setActivity(state.preferences.language === 'en' ? 'Organizing the response…' : 'Organizando a resposta…');
     const elapsed = finishProgress(progress);
-    const titleResult = extractConversationTitle(answer);
+    const titleResult = extractConversationTitle(answer, prompt);
     const visibleAnswer = titleResult.content;
     if (titleResult.title) state.conversationTitle = titleResult.title;
     else if (isFirstMessage && !state.conversationTitle) state.conversationTitle = createFallbackTitle(prompt);
@@ -1296,6 +1468,12 @@ $('#authLanguageSelect').addEventListener('change', event => applyLanguage(event
 $('#accountButton').addEventListener('click', openAccountModal);
 $('#themeButton').addEventListener('click', () => { $('#themeModal').hidden = false; });
 $$('[data-close-modal]').forEach(button => button.addEventListener('click', () => { $(`#${button.dataset.closeModal}`).hidden = true; }));
+$('#closeTitleEditor').addEventListener('click', closeTitleEditor);
+$('#cancelTitleEditor').addEventListener('click', closeTitleEditor);
+$('#titleEditorForm').addEventListener('submit', event => {
+  event.preventDefault();
+  if (saveEditedConversationTitle($('#conversationTitleInput').value)) closeTitleEditor();
+});
 $('#confirmCancel').addEventListener('click', () => finishConfirmation(false));
 $('#confirmAccept').addEventListener('click', () => finishConfirmation(true));
 

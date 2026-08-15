@@ -115,6 +115,16 @@ function latest_user_content(array $messages): string {
     return '';
 }
 
+function request_content_for_classification(array $messages): string {
+    for ($i = count($messages) - 1; $i >= 0; $i--) {
+        if (($messages[$i]['role'] ?? '') !== 'user') continue;
+        $content = (string)($messages[$i]['content'] ?? '');
+        if (str_starts_with(ltrim($content), 'CONTINUAÇÃO_INTERNA_DE_PROJETO_GRANDE:')) continue;
+        return $content;
+    }
+    return latest_user_content($messages);
+}
+
 function visible_request(string $content): string {
     $parts = preg_split('~\n\n(?:ARQUIVOS ANEXADOS|PROFUNDIDADE DEFINIDA AUTOMATICAMENTE|MODO AUTO ZIP ATIVO|PRIMEIRA_RESPOSTA):~iu', $content, 2);
     return trim((string)($parts[0] ?? $content));
@@ -127,9 +137,9 @@ function is_simple_greeting(string $content): bool {
 function order_agents_for_request(array $agents, string $complexity, bool $sharedHosting): array {
     $weights = $complexity === 'light'
         ? ['north-mini-code' => 120, 'nemotron-3-super' => 112, 'gemma-4-31b' => 100, 'gemma-4-26b' => 95, 'nemotron-3-ultra' => 70]
-        : ($sharedHosting
-            ? ['north-mini-code' => 120, 'nemotron-3-super' => 110, 'gemma-4-31b' => 100, 'gemma-4-26b' => 90, 'nemotron-3-ultra' => 75]
-            : ['nemotron-3-ultra' => 120, 'nemotron-3-super' => 115, 'north-mini-code' => 105, 'gemma-4-31b' => 100, 'gemma-4-26b' => 90]);
+        : ($complexity === 'heavy'
+            ? ['nemotron-3-super' => 125, 'north-mini-code' => 120, 'gemma-4-31b' => 110, 'nemotron-3-ultra' => 100, 'gemma-4-26b' => 95]
+            : ['north-mini-code' => 122, 'nemotron-3-super' => 118, 'gemma-4-31b' => 108, 'gemma-4-26b' => 100, 'nemotron-3-ultra' => 85]);
     foreach ($agents as $index => &$agent) {
         $agent['_order'] = $index;
         $agent['_score'] = 80;
@@ -145,7 +155,7 @@ function order_agents_for_request(array $agents, string $complexity, bool $share
 }
 
 function classify_request(array $messages): array {
-    $latest = latest_user_content($messages);
+    $latest = request_content_for_classification($messages);
     $lower = function_exists('mb_strtolower') ? mb_strtolower($latest, 'UTF-8') : strtolower($latest);
     $score = 0;
     if (strlen($latest) > 3000) $score += 2;
@@ -164,6 +174,7 @@ function classify_request(array $messages): array {
     if (preg_match('~autentica.{0,3}o|autoriza.{0,3}o|pagamento|criptograf|corrup.{0,3}o de dados|perda de dados|opera.{0,3}(?:o|es) destrutiva|c.{0,3}digo nativo|memory leak|race condition~iu', $lower)) $score += 3;
     if (preg_match('~analise|revise|compare|melhor solu.{0,3}o|produ.{0,3}o|profissional~iu', $lower)) $score += 1;
     if (count($messages) >= 8) $score += 1;
+    if (preg_match('~(?:crie|criar|desenvolva|desenvolver|gere|gerar|construa|implemente).{0,120}(?:plugin|projeto|sistema|aplica.{0,3}o|api|site|bot).{0,160}(?:complet|todas?\s+as\s+classes|todos?\s+os\s+arquivos|execut[aá]vel)|entreg[aá]vel\s*:?.{0,180}(?:classes|arquivos|plugin\.yml|config\.yml)~isu', $lower)) $score += 5;
     $complexity = $score >= 5 ? 'heavy' : ($score >= 2 ? 'medium' : 'light');
     return ['complexity' => $complexity, 'score' => $score, 'agents' => $complexity === 'heavy' ? 5 : ($complexity === 'medium' ? 2 : 1)];
 }
@@ -365,8 +376,8 @@ function chat(): void {
     // Blocos maiores reduzem drasticamente a quantidade de continuações de um
     // projeto. O streaming preserva o que já foi recebido caso um provedor pare.
     $profile = $classification['complexity'] === 'heavy'
-        ? [0.15, 7800, 'medium', 115, 105]
-        : ($classification['complexity'] === 'medium' ? [0.20, 4600, 'low', 85, 76] : [0.2, 1800, 'none', 60, 52]);
+        ? [0.13, 8192, 'low', 155, 140]
+        : ($classification['complexity'] === 'medium' ? [0.18, 5600, 'low', 95, 84] : [0.2, 2400, 'none', 60, 52]);
     $payload = [
         'messages' => $body['messages'],
         'temperature' => $profile[0],

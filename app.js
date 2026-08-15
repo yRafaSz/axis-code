@@ -41,6 +41,11 @@ MÉTODO:
 8. Nunca invente API, método, biblioteca, versão, arquivo, comando executado, teste ou resultado. Diferencie claramente validação real de recomendação.
 9. Não revele raciocínio privado ou cadeia de pensamento. Forneça conclusões, justificativas técnicas breves e evidências úteis.
 
+ISOLAMENTO DE CONVERSAS:
+- Considere exclusivamente as mensagens presentes nesta conversa. Nunca suponha, recupere ou reutilize detalhes de outro chat, projeto ou usuário.
+- Informações de outras conversas só podem ser usadas quando existir um bloco explícito chamado CONTEXTO_DE_OUTRAS_CONVERSAS_AUTORIZADO. Esse bloco significa que o usuário pediu o acesso e confirmou a permissão na interface.
+- Em saudações ou pedidos sem contexto técnico, não invente continuidade, projeto, erro, arquivo ou tarefa anterior.
+
 EFICIÊNCIA DA RESPOSTA:
 - FAST: resposta e código, sem introdução extensa.
 - NORMAL: solução, implementação e somente observações relevantes.
@@ -86,7 +91,7 @@ const translations = {
   'pt-BR': {
     language: 'Idioma', authHeadline: 'Seu ambiente profissional de programação.', authDescription: 'Entre para acessar suas conversas, preferências e ferramentas de engenharia de software com IA.',
     authBenefitOne: 'Arquitetura e implementação completas', authBenefitTwo: 'Análise segura de código e documentos', authBenefitThree: 'Workspace pessoal e configurável',
-      login: 'Entrar', register: 'Criar conta', email: 'E-mail', password: 'Senha', displayName: 'Nome de usuário', confirmPassword: 'Confirmar senha', enterAccount: 'Entrar na conta', createAccount: 'Criar minha conta',
+      login: 'Entrar', register: 'Criar conta', email: 'E-mail', password: 'Senha', rememberMe: 'Lembrar meu login', displayName: 'Nome de usuário', confirmPassword: 'Confirmar senha', enterAccount: 'Entrar na conta', createAccount: 'Criar minha conta',
     newChat: 'Nova conversa', workspace: 'WORKSPACE', codeChat: 'Chat de programação', generateProject: 'Gerar projeto', reviewCode: 'Revisar código', deepDebug: 'Diagnóstico profundo', recent: 'RECENTES', clear: 'Limpar', myWorkspace: 'Meu workspace', privateEnvironment: 'Ambiente privado', ecosystem: 'ECOSSISTEMA',
     heroKicker: 'ENGENHARIA DE SOFTWARE AUMENTADA', heroTitle: 'Construa além<br/>do <em>óbvio.</em>', heroDescription: 'Um agente técnico que analisa arquitetura, segurança, desempenho e manutenção antes de escrever a primeira linha.',
     buildLabel: 'CONSTRUIR', buildTitle: 'Sistema completo', buildDescription: 'Arquitetura, implementação, banco, segurança, testes e implantação.', diagnoseLabel: 'DIAGNOSTICAR', diagnoseTitle: 'Corrigir com precisão', diagnoseDescription: 'Causa raiz, evidências, regressões e correções prontas para produção.', evolveLabel: 'EVOLUIR', evolveTitle: 'Projeto existente', evolveDescription: 'Novas funcionalidades sem quebrar contratos, dados ou compatibilidade.',
@@ -96,7 +101,7 @@ const translations = {
   en: {
     language: 'Language', authHeadline: 'Your professional coding environment.', authDescription: 'Sign in to access your conversations, preferences, and AI software engineering tools.',
     authBenefitOne: 'Complete architecture and implementation', authBenefitTwo: 'Secure code and document analysis', authBenefitThree: 'Personal and configurable workspace',
-      login: 'Sign in', register: 'Create account', email: 'Email', password: 'Password', displayName: 'Username', confirmPassword: 'Confirm password', enterAccount: 'Sign in', createAccount: 'Create my account',
+      login: 'Sign in', register: 'Create account', email: 'Email', password: 'Password', rememberMe: 'Remember my login', displayName: 'Username', confirmPassword: 'Confirm password', enterAccount: 'Sign in', createAccount: 'Create my account',
     newChat: 'New conversation', workspace: 'WORKSPACE', codeChat: 'Coding chat', generateProject: 'Generate project', reviewCode: 'Review code', deepDebug: 'Deep diagnostics', recent: 'RECENT', clear: 'Clear', myWorkspace: 'My workspace', privateEnvironment: 'Private environment', ecosystem: 'ECOSYSTEM',
     heroKicker: 'AUGMENTED SOFTWARE ENGINEERING', heroTitle: 'Build beyond<br/>the <em>obvious.</em>', heroDescription: 'A technical agent that considers architecture, security, performance, and maintenance before writing the first line.',
     buildLabel: 'BUILD', buildTitle: 'Complete system', buildDescription: 'Architecture, implementation, database, security, tests, and deployment.', diagnoseLabel: 'DIAGNOSE', diagnoseTitle: 'Fix precisely', diagnoseDescription: 'Root cause, evidence, regressions, and production-ready fixes.', evolveLabel: 'EVOLVE', evolveTitle: 'Existing project', evolveDescription: 'New features without breaking contracts, data, or compatibility.',
@@ -615,6 +620,42 @@ function loadHistory() {
   catch { return []; }
 }
 
+function requestsOtherConversationContext(prompt) {
+  const text = String(prompt || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  return /(?:outr[oa]s?\s+(?:conversas?|chats?)|conversas?\s+anteriores?|chats?\s+anteriores?|historico\s+(?:de\s+)?conversas?|meus?\s+(?:outros?\s+)?chats?|previous\s+(?:conversation|chat)s?|other\s+(?:conversation|chat)s?)/i.test(text)
+    && /(?:use|usar|consulte|consultar|busque|buscar|puxe|puxar|leia|ler|olhe|olhar|veja|ver|traga|trazer|pegue|pegar|aproveite|aproveitar|recupere|recuperar|lembre|lembrar|falei|disse|mencionei|informac|contexto|dados|continue|continuar|referencia|check|read|fetch|search|look|get|remember|context|continue)/i.test(text);
+}
+
+function buildAuthorizedConversationContext() {
+  const records = loadHistory()
+    .filter(record => record.id !== state.conversationId && Array.isArray(record.messages) && record.messages.length)
+    .slice(0, 4);
+  if (!records.length) return '';
+
+  let remaining = 18000;
+  const blocks = [];
+  for (const record of records) {
+    const excerpts = [];
+    for (const message of record.messages.slice(-6)) {
+      if (!['user', 'assistant'].includes(message.role)) continue;
+      const source = message.displayContent || message.content || '';
+      const clean = String(source)
+        .replace(/\[\[CONVERSATION_TITLE:[^\]]+\]\]/gi, '')
+        .replace(/\n\n(?:PROFUNDIDADE DEFINIDA AUTOMATICAMENTE|IDIOMA OBRIGATÓRIO DA RESPOSTA|RESPONSE LANGUAGE|MODO AUTO ZIP ATIVO|PRIMEIRA_RESPOSTA):[\s\S]*$/iu, '')
+        .trim();
+      if (!clean) continue;
+      const excerpt = clean.slice(0, Math.min(3500, remaining));
+      if (!excerpt) break;
+      excerpts.push(`${message.role === 'user' ? 'Usuário' : 'Axis'}: ${excerpt}`);
+      remaining -= excerpt.length;
+      if (remaining <= 0) break;
+    }
+    if (excerpts.length) blocks.push(`Conversa: ${record.title}\n${excerpts.join('\n')}`);
+    if (remaining <= 0) break;
+  }
+  return blocks.join('\n\n---\n\n');
+}
+
 function storeHistory(records) {
   const sorted = [...records]
     .sort((a, b) => Number(b.pinned) - Number(a.pinned) || Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
@@ -854,6 +895,7 @@ async function deleteConversation(id, title = '') {
 function loadConversation(id) {
   const record = loadHistory().find(item => item.id === id);
   if (!record) return;
+  state.controller?.abort();
   state.conversationId = record.id;
   state.conversationTitle = record.title || '';
   state.messages = record.messages;
@@ -1176,6 +1218,22 @@ async function sendPrompt(prompt) {
     return;
   }
 
+  let authorizedConversationContext = '';
+  if (requestsOtherConversationContext(prompt)) {
+    const availableContext = buildAuthorizedConversationContext();
+    if (availableContext) {
+      const allowed = await confirmAction(
+        state.preferences.language === 'en' ? 'Allow access to other conversations?' : 'Permitir acesso a outras conversas?',
+        state.preferences.language === 'en'
+          ? 'Axis will read excerpts from your recent conversations only for this request. Nothing will be shared automatically in future messages.'
+          : 'O Axis lerá trechos das suas conversas recentes somente para este pedido. Nada será compartilhado automaticamente nas próximas mensagens.',
+        state.preferences.language === 'en' ? 'Allow once' : 'Permitir uma vez'
+      );
+      if (allowed) authorizedConversationContext = availableContext;
+      else showToast(state.preferences.language === 'en' ? 'Other conversations were not accessed.' : 'As outras conversas não foram acessadas.');
+    }
+  }
+
   let fullPrompt = prompt.trim() || 'Analise profissionalmente os arquivos anexados.';
   const isFirstMessage = state.messages.length === 0;
   if (state.attachments.length) {
@@ -1203,6 +1261,7 @@ async function sendPrompt(prompt) {
   els.input.value = '';
   autoResize();
   state.isGenerating = true;
+  const requestConversationId = state.conversationId;
   els.send.classList.add('is-stopping');
   els.send.title = 'Cancelar geração';
   els.send.setAttribute('aria-label', 'Cancelar geração');
@@ -1213,11 +1272,20 @@ async function sendPrompt(prompt) {
   try {
     state.controller = new AbortController();
     const activeSystemPrompt = SYSTEM_PROMPT;
+    const conversationMessages = state.messages.map(({ role, content }) => ({ role, content }));
+    if (authorizedConversationContext && conversationMessages.length) {
+      const current = conversationMessages[conversationMessages.length - 1];
+      current.content += `\n\nCONTEXTO_DE_OUTRAS_CONVERSAS_AUTORIZADO:\n${authorizedConversationContext}\n\nFIM_DO_CONTEXTO_AUTORIZADO.`;
+    }
     const messagesPayload = [
       { role: 'system', content: `${activeSystemPrompt}\n\nDetermine automaticamente a profundidade necessária. O pedido atual foi classificado localmente como: ${profile.label}.` },
-      ...state.messages.map(({ role, content }) => ({ role, content }))
+      ...conversationMessages
     ];
     const answer = await requestCompleteAxisAnswer(messagesPayload, progress);
+    if (state.conversationId !== requestConversationId) {
+      finishProgress(progress);
+      return;
+    }
     progress.setActivity(state.preferences.language === 'en' ? 'Organizing the response…' : 'Organizando a resposta…');
     const elapsed = finishProgress(progress);
     const titleResult = extractConversationTitle(answer, prompt);
@@ -1231,6 +1299,7 @@ async function sendPrompt(prompt) {
     saveCurrentConversation();
   } catch (error) {
     finishProgress(progress);
+    if (state.conversationId !== requestConversationId) return;
     const message = error.name === 'AbortError'
       ? (state.preferences.language === 'en' ? 'Generation stopped.' : 'Geração cancelada.')
       : (state.preferences.language === 'en' ? `The API request failed: ${error.message}` : `Não foi possível consultar a API: ${error.message}`);

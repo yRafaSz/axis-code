@@ -131,7 +131,7 @@ function visible_request(string $content): string {
 }
 
 function is_simple_greeting(string $content): bool {
-    return preg_match('~^(?:ol[aá]|oi|opa|hey|hello|bom\s+dia|boa\s+tarde|boa\s+noite)[\s!,.?]*$~iu', visible_request($content)) === 1;
+    return preg_match('~^(?:ol[aá]+|oi+|opa+|e+a[ií]+|hey+|hello+|hi+|bom\s+dia|boa\s+tarde|boa\s+noite)[\s!,.?]*$~iu', visible_request($content)) === 1;
 }
 
 function order_agents_for_request(array $agents, string $complexity, bool $sharedHosting): array {

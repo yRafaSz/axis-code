@@ -12,8 +12,9 @@ function is_https(): bool {
 }
 
 session_name('axis_session');
+ini_set('session.gc_maxlifetime', (string)(60 * 60 * 24 * 30));
 session_set_cookie_params([
-    'lifetime' => 60 * 60 * 24 * 30,
+    'lifetime' => 0,
     'path' => '/',
     'secure' => is_https(),
     'httponly' => true,
@@ -203,6 +204,16 @@ function login_user(int $id): void {
     $_SESSION['csrf'] = bin2hex(random_bytes(24));
 }
 
+function set_login_persistence(bool $remember): void {
+    setcookie(session_name(), session_id(), [
+        'expires' => $remember ? time() + (60 * 60 * 24 * 30) : 0,
+        'path' => '/',
+        'secure' => is_https(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
 $action = (string)($_GET['action'] ?? 'config');
 $method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
 
@@ -282,6 +293,7 @@ if ($action === 'login' && $method === 'POST') {
         $update->execute([password_hash($password, PASSWORD_DEFAULT), (int)$user['id']]);
     }
     login_user((int)$user['id']);
+    set_login_persistence(!empty($body['rememberMe']));
     json_response(200, ['ok' => true, 'user' => user_payload(current_user_id()), 'csrf' => csrf_token()]);
 }
 

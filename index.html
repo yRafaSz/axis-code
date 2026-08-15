@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" href="axis-preview.png" />
   <title>Axis Code — Engenharia de software com IA</title>
   <meta name="description" content="Assistente de programação com IA, foco em Java e suporte a múltiplas linguagens." />
-    <link rel="stylesheet" href="styles.css?v=12.6" />
+    <link rel="stylesheet" href="styles.css?v=12.7" />
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -44,6 +44,7 @@
         <form class="auth-form active" id="loginForm" data-auth-panel="login">
           <label><span data-i18n="email">E-mail</span><input type="email" name="email" autocomplete="email" required maxlength="320" /></label>
           <label><span data-i18n="password">Senha</span><input type="password" name="password" autocomplete="current-password" required minlength="10" maxlength="128" /></label>
+          <label class="remember-login"><input type="checkbox" name="rememberMe" value="1" checked /><span class="remember-check" aria-hidden="true"></span><span data-i18n="rememberMe">Lembrar meu login</span></label>
           <button class="primary-button auth-submit" type="submit" data-i18n="enterAccount">Entrar na conta</button>
         </form>
         <form class="auth-form" id="registerForm" data-auth-panel="register" hidden>
@@ -264,6 +265,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-    <script src="app.js?v=12.6"></script>
+    <script src="app.js?v=12.7"></script>
 </body>
 </html>

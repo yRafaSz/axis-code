@@ -207,14 +207,23 @@ $action = (string)($_GET['action'] ?? 'config');
 $method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
 
 if ($action === 'avatar' && $method === 'GET') {
+    $viewerId = require_user();
     $id = max(0, (int)($_GET['id'] ?? 0));
+    if ($id !== $viewerId) json_response(403, ['error' => 'Você não pode acessar a foto de outra conta.']);
     $statement = db()->prepare('SELECT avatar_mime, avatar_data FROM axis_users WHERE id = ? AND avatar_data IS NOT NULL LIMIT 1');
     $statement->execute([$id]);
     $avatar = $statement->fetch();
     if (!$avatar) { http_response_code(404); exit; }
-    header('Content-Type: ' . $avatar['avatar_mime']);
-    header('Cache-Control: public, max-age=86400');
-    echo $avatar['avatar_data'];
+    $data = $avatar['avatar_data'];
+    if (is_resource($data)) $data = stream_get_contents($data);
+    if (!is_string($data) || $data === '') { http_response_code(404); exit; }
+    while (ob_get_level() > 0) ob_end_clean();
+    session_write_close();
+    header('Content-Type: ' . (string)$avatar['avatar_mime']);
+    header('Content-Length: ' . strlen($data));
+    header('Content-Disposition: inline');
+    header('Cache-Control: private, no-cache, max-age=0');
+    echo $data;
     exit;
 }
 

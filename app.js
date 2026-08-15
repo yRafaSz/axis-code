@@ -375,17 +375,43 @@ function userInitial(user = state.auth.user) {
   return (user?.displayName || user?.email || 'R').trim().charAt(0).toUpperCase() || 'R';
 }
 
+const avatarImageCache = new Map();
+function loadAvatarImage(source) {
+  if (avatarImageCache.has(source)) return avatarImageCache.get(source);
+  const loading = fetch(source, { credentials: 'same-origin', cache: 'no-store' })
+    .then(async response => {
+      if (!response.ok) throw new Error(`Avatar HTTP ${response.status}`);
+      const blob = await response.blob();
+      if (!blob.size || !blob.type.startsWith('image/')) throw new Error('Resposta de avatar inválida.');
+      return URL.createObjectURL(blob);
+    })
+    .catch(error => {
+      avatarImageCache.delete(source);
+      throw error;
+    });
+  avatarImageCache.set(source, loading);
+  return loading;
+}
+
 function setAvatar(element, user = state.auth.user) {
   if (!element) return;
-  if (user?.avatarUrl) {
+  const source = String(user?.avatarUrl || '');
+  element.dataset.avatarSource = source;
+  element.style.backgroundImage = '';
+  element.classList.remove('has-photo');
+  element.textContent = userInitial(user);
+  if (!source) return;
+  loadAvatarImage(source).then(objectUrl => {
+    if (element.dataset.avatarSource !== source) return;
     element.textContent = '';
-    element.style.backgroundImage = `url("${user.avatarUrl}")`;
+    element.style.backgroundImage = `url("${objectUrl}")`;
     element.classList.add('has-photo');
-  } else {
+  }).catch(() => {
+    if (element.dataset.avatarSource !== source) return;
     element.style.backgroundImage = '';
     element.classList.remove('has-photo');
     element.textContent = userInitial(user);
-  }
+  });
 }
 
 function setAxisAvatar(element) {
@@ -1533,6 +1559,7 @@ $('#avatarInput').addEventListener('change', async event => {
     formData.append('avatar', file);
     formData.append('csrf', state.auth.csrf);
     const result = await authRequest('avatar', { method: 'POST', formData });
+    if (result.user?.avatarUrl) result.user.avatarUrl += `&refresh=${Date.now()}`;
     state.auth.user = result.user;
     updateAccountUI();
     resultNode.textContent = state.preferences.language === 'en' ? 'Photo updated.' : 'Foto atualizada.';

@@ -5,6 +5,9 @@ header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 header('X-Content-Type-Options: nosniff');
 
+session_name('axis_session');
+session_start();
+
 set_exception_handler(function (Throwable $error): void {
     respond(500, [
         'error' => 'Falha interna do PHP.',
@@ -187,12 +190,12 @@ function curl_for_agent(array $agent, array $payload, int $timeoutSeconds = 45) 
 function parse_openrouter_result($ch, string $raw): array {
     $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $data = json_decode($raw, true);
-    if ($status < 200 || $status >= 300) return ['ok' => false, 'error' => (string)($data['error']['message'] ?? ('OpenRouter HTTP ' . $status))];
+    if ($status < 200 || $status >= 300) return ['ok' => false, 'status' => $status, 'error' => (string)($data['error']['message'] ?? ('OpenRouter HTTP ' . $status))];
     $content = (string)($data['choices'][0]['message']['content'] ?? '');
     $finishReason = (string)($data['choices'][0]['finish_reason'] ?? '');
     return $content !== ''
-        ? ['ok' => true, 'content' => $content, 'partial' => in_array($finishReason, ['length', 'max_tokens'], true)]
-        : ['ok' => false, 'error' => 'O modelo retornou uma resposta vazia.'];
+        ? ['ok' => true, 'status' => $status, 'content' => $content, 'partial' => in_array($finishReason, ['length', 'max_tokens'], true)]
+        : ['ok' => false, 'status' => $status, 'error' => 'O modelo retornou uma resposta vazia.'];
 }
 
 function supports_parallel_curl(): bool {
@@ -245,7 +248,8 @@ function call_single_streamed(array $agent, array $payload, int $timeoutSeconds 
     $streamError = '';
     $streamDone = false;
     $finishReason = '';
-    $consumeLine = function (string $line) use (&$content, &$streamError, &$streamDone, &$finishReason): void {
+    $streamStatus = 0;
+    $consumeLine = function (string $line) use (&$content, &$streamError, &$streamDone, &$finishReason, &$streamStatus): void {
         $line = trim($line);
         if (!str_starts_with($line, 'data:')) return;
         $json = trim(substr($line, 5));
@@ -255,6 +259,7 @@ function call_single_streamed(array $agent, array $payload, int $timeoutSeconds 
         if (!is_array($data)) return;
         if (isset($data['error'])) {
             $streamError = (string)($data['error']['message'] ?? 'O provedor interrompeu a resposta.');
+            $streamStatus = (int)($data['error']['code'] ?? 0);
             return;
         }
         $delta = $data['choices'][0]['delta']['content'] ?? '';
@@ -284,7 +289,7 @@ function call_single_streamed(array $agent, array $payload, int $timeoutSeconds 
     if (trim($content) !== '') {
         $partial = ($executed === false && !$streamDone) || in_array($finishReason, ['length', 'max_tokens'], true);
         curl_close($ch);
-        return ['ok' => true, 'content' => $content, 'partial' => $partial];
+        return ['ok' => true, 'status' => $status, 'content' => $content, 'partial' => $partial];
     }
 
     // Alguns provedores ignoram stream=true e retornam o JSON convencional.
@@ -294,21 +299,47 @@ function call_single_streamed(array $agent, array $payload, int $timeoutSeconds 
         return $regular;
     }
     curl_close($ch);
-    return ['ok' => false, 'error' => $streamError ?: ($curlError ?: ('OpenRouter HTTP ' . $status))];
+    return ['ok' => false, 'status' => $streamStatus ?: $status, 'error' => $streamError ?: ($curlError ?: ('OpenRouter HTTP ' . $status))];
 }
 
 function call_first_available(array $agents, array $payload, int $totalSeconds = 48, int $perAttemptSeconds = 30): array {
     $startedAt = microtime(true);
     $errors = [];
+    $rateLimited = 0;
+    $otherFailures = 0;
     foreach ($agents as $agent) {
         $remaining = $totalSeconds - (int)(microtime(true) - $startedAt);
         if ($remaining < 7) break;
         $timeout = min($perAttemptSeconds, max(7, $remaining - 2));
         $result = call_single_streamed($agent, $payload, $timeout);
         if ($result['ok']) return $result;
+        if ((int)($result['status'] ?? 0) === 429) $rateLimited++; else $otherFailures++;
         $errors[] = $agent['model'] . ': ' . $result['error'];
     }
+
+    // Última alternativa para modelos gratuitos temporariamente lotados: o
+    // roteador oficial escolhe outro modelo free compatível. Mantemos no máximo
+    // duas chaves distintas para não prolongar indefinidamente uma cota global.
+    if ($rateLimited > 0 && getenv('AXIS_DISABLE_FREE_ROUTER') !== 'true') {
+        $seenKeys = [];
+        foreach ($agents as $agent) {
+            $fingerprint = hash('sha256', $agent['apiKey']);
+            if (isset($seenKeys[$fingerprint])) continue;
+            $seenKeys[$fingerprint] = true;
+            $remaining = $totalSeconds - (int)(microtime(true) - $startedAt);
+            if ($remaining < 10) break;
+            $routerAgent = ['model' => 'openrouter/free', 'apiKey' => $agent['apiKey']];
+            $result = call_single_streamed($routerAgent, $payload, min(45, max(9, $remaining - 2)));
+            if ($result['ok']) return $result;
+            if ((int)($result['status'] ?? 0) === 429) $rateLimited++; else $otherFailures++;
+            $errors[] = 'roteador gratuito: ' . $result['error'];
+            if (count($seenKeys) >= 2) break;
+        }
+    }
     $details = $errors ? implode(' | ', array_slice($errors, 0, 3)) : 'tempo máximo da hospedagem atingido';
+    if ($rateLimited > 0 && $otherFailures === 0) {
+        return ['ok' => false, 'status' => 429, 'error' => 'O limite temporário dos modelos gratuitos do OpenRouter foi atingido. Aguarde a renovação da cota ou adicione créditos à conta OpenRouter. Chaves criadas na mesma conta compartilham o mesmo limite.'];
+    }
     return ['ok' => false, 'error' => 'Nenhum modelo respondeu no modo compatível: ' . $details];
 }
 
@@ -416,6 +447,9 @@ function chat(): void {
 $action = (string)($_GET['action'] ?? '');
 if ($action === '') {
     respond(200, ['ok' => true, 'message' => 'Axis API PHP ativa.', 'next' => 'Use ?action=ai-status']);
+}
+if (in_array($action, ['ai-status', 'ai-chat', 'maven-run'], true) && empty($_SESSION['user_id'])) {
+    respond(401, ['error' => 'Faça login para acessar o RafTech_EcoSystem.']);
 }
 if ($action === 'ai-status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $agents = load_agents();

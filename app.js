@@ -78,6 +78,42 @@ PROTOCOLOS INTERNOS:
 - Quando houver PRIMEIRA_RESPOSTA, gere um título específico de 3 a 7 palavras baseado no objetivo real da conversa, não apenas nas primeiras palavras. Evite “Ajuda com código”, “Nova conversa” e títulos genéricos. Acrescente somente no final: [[CONVERSATION_TITLE:Título criado]]. Não explique a marca.
 - Quando houver MODO AUTO ZIP ATIVO, entregue o conteúdo completo de cada arquivo criado ou alterado e respeite exatamente o marcador de caminho solicitado. Não inclua arquivos não alterados.`;
 
+const translations = {
+  'pt-BR': {
+    language: 'Idioma', authHeadline: 'Seu ambiente profissional de programação.', authDescription: 'Entre para acessar suas conversas, preferências e ferramentas de engenharia de software com IA.',
+    authBenefitOne: 'Arquitetura e implementação completas', authBenefitTwo: 'Análise segura de código e documentos', authBenefitThree: 'Workspace pessoal e configurável',
+    login: 'Entrar', register: 'Criar conta', email: 'E-mail', password: 'Senha', displayName: 'Nome de usuário', confirmPassword: 'Confirmar senha', enterAccount: 'Entrar na conta', createAccount: 'Criar minha conta', or: 'ou', continueGoogle: 'Continuar com Google',
+    newChat: 'Nova conversa', workspace: 'WORKSPACE', codeChat: 'Chat de programação', generateProject: 'Gerar projeto', reviewCode: 'Revisar código', deepDebug: 'Diagnóstico profundo', recent: 'RECENTES', clear: 'Limpar', myWorkspace: 'Meu workspace', privateEnvironment: 'Ambiente privado', ecosystem: 'ECOSSISTEMA',
+    heroKicker: 'ENGENHARIA DE SOFTWARE AUMENTADA', heroTitle: 'Construa além<br/>do <em>óbvio.</em>', heroDescription: 'Um agente técnico que analisa arquitetura, segurança, desempenho e manutenção antes de escrever a primeira linha.',
+    buildLabel: 'CONSTRUIR', buildTitle: 'Sistema completo', buildDescription: 'Arquitetura, implementação, banco, segurança, testes e implantação.', diagnoseLabel: 'DIAGNOSTICAR', diagnoseTitle: 'Corrigir com precisão', diagnoseDescription: 'Causa raiz, evidências, regressões e correções prontas para produção.', evolveLabel: 'EVOLUIR', evolveTitle: 'Projeto existente', evolveDescription: 'Novas funcionalidades sem quebrar contratos, dados ou compatibilidade.',
+    aiDisclaimer: 'A IA pode cometer erros. Revise o código antes de usar em produção.', account: 'CONTA', myAccount: 'Minha conta', accountDescription: 'Atualize sua foto, nome e senha. O e-mail não pode ser alterado.', changePhoto: 'Alterar foto', photoLimit: 'JPG, PNG, WEBP ou GIF, até 2 MB.', emailImmutable: 'E-mail (não pode ser alterado)', currentPassword: 'Senha atual', newPassword: 'Nova senha', logout: 'Sair da conta', cancel: 'Cancelar', saveChanges: 'Salvar alterações',
+    appearance: 'APARÊNCIA', chooseTheme: 'Escolha um tema', themeDescription: 'Os temas alteram toda a interface. Um fundo personalizado altera somente a conversa.', themeAxis: 'Verde técnico', themeAurora: 'Violeta e ciano', themeMidnight: 'Azul profundo', themeGraphite: 'Cinza minimalista', customBackground: 'Fundo personalizado', customBackgroundDescription: 'Escolha uma imagem de até 2 MB para a área de conversa.', chooseImage: 'Escolher imagem', removeBackground: 'Remover fundo', confirmation: 'CONFIRMAÇÃO', confirm: 'Confirmar', attach: 'Anexar', localTool: 'FERRAMENTA LOCAL', allowMavenTitle: 'Permitir o uso do Maven?', allowMavenDescription: 'A execução só acontecerá desta vez e após sua autorização.', requestedOperation: 'OPERAÇÃO SOLICITADA', mavenFolder: 'Pasta do projeto Maven', mavenFolderHint: 'A pasta precisa conter um arquivo pom.xml.', mavenWarning: 'Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.', deny: 'Não permitir', allowOnce: 'Permitir uma vez'
+  },
+  en: {
+    language: 'Language', authHeadline: 'Your professional coding environment.', authDescription: 'Sign in to access your conversations, preferences, and AI software engineering tools.',
+    authBenefitOne: 'Complete architecture and implementation', authBenefitTwo: 'Secure code and document analysis', authBenefitThree: 'Personal and configurable workspace',
+    login: 'Sign in', register: 'Create account', email: 'Email', password: 'Password', displayName: 'Username', confirmPassword: 'Confirm password', enterAccount: 'Sign in', createAccount: 'Create my account', or: 'or', continueGoogle: 'Continue with Google',
+    newChat: 'New conversation', workspace: 'WORKSPACE', codeChat: 'Coding chat', generateProject: 'Generate project', reviewCode: 'Review code', deepDebug: 'Deep diagnostics', recent: 'RECENT', clear: 'Clear', myWorkspace: 'My workspace', privateEnvironment: 'Private environment', ecosystem: 'ECOSYSTEM',
+    heroKicker: 'AUGMENTED SOFTWARE ENGINEERING', heroTitle: 'Build beyond<br/>the <em>obvious.</em>', heroDescription: 'A technical agent that considers architecture, security, performance, and maintenance before writing the first line.',
+    buildLabel: 'BUILD', buildTitle: 'Complete system', buildDescription: 'Architecture, implementation, database, security, tests, and deployment.', diagnoseLabel: 'DIAGNOSE', diagnoseTitle: 'Fix precisely', diagnoseDescription: 'Root cause, evidence, regressions, and production-ready fixes.', evolveLabel: 'EVOLVE', evolveTitle: 'Existing project', evolveDescription: 'New features without breaking contracts, data, or compatibility.',
+    aiDisclaimer: 'AI can make mistakes. Review code before using it in production.', account: 'ACCOUNT', myAccount: 'My account', accountDescription: 'Update your photo, name, and password. Email cannot be changed.', changePhoto: 'Change photo', photoLimit: 'JPG, PNG, WEBP, or GIF, up to 2 MB.', emailImmutable: 'Email (cannot be changed)', currentPassword: 'Current password', newPassword: 'New password', logout: 'Sign out', cancel: 'Cancel', saveChanges: 'Save changes',
+    appearance: 'APPEARANCE', chooseTheme: 'Choose a theme', themeDescription: 'Themes change the entire interface. A custom background changes only the conversation area.', themeAxis: 'Technical green', themeAurora: 'Violet and cyan', themeMidnight: 'Deep blue', themeGraphite: 'Minimal graphite', customBackground: 'Custom background', customBackgroundDescription: 'Choose an image up to 2 MB for the conversation area.', chooseImage: 'Choose image', removeBackground: 'Remove background', confirmation: 'CONFIRMATION', confirm: 'Confirm', attach: 'Attach', localTool: 'LOCAL TOOL', allowMavenTitle: 'Allow Maven usage?', allowMavenDescription: 'Execution will only happen this time and after your approval.', requestedOperation: 'REQUESTED OPERATION', mavenFolder: 'Maven project folder', mavenFolderHint: 'The folder must contain a pom.xml file.', mavenWarning: 'Maven projects can run plugins and code during the build. Only approve projects you trust.', deny: 'Deny', allowOnce: 'Allow once'
+  }
+};
+
+const preloadedPrompts = {
+  'pt-BR': {
+    buildSystem: 'Quero construir um sistema completo e executável. Faça perguntas somente sobre requisitos realmente bloqueantes; depois defina arquitetura, tecnologias e estrutura, implemente todos os arquivos necessários sem placeholders, inclua segurança, persistência, validação, testes, Docker e instruções de execução. Mantenha tudo consistente e pronto para evolução.',
+    diagnose: 'Vou enviar código, arquivos ou logs. Faça um diagnóstico baseado em evidências: reproduza mentalmente o fluxo, localize a causa raiz, classifique os achados por impacto e aplique a menor correção segura. Verifique regressões, segurança, concorrência, desempenho e compatibilidade. Entregue os arquivos corrigidos integralmente.',
+    evolve: 'Quero evoluir um projeto existente. Analise os arquivos anexados, preserve contratos e comportamento compatível, identifique dívida técnica e implemente a funcionalidade solicitada com mudanças coesas. Atualize configurações e testes necessários, explique migrações incompatíveis e entregue somente os arquivos criados ou alterados, completos.'
+  },
+  en: {
+    buildSystem: 'I want to build a complete, runnable system. Ask only for truly blocking requirements; then define the architecture, technologies, and structure, implement every required file without placeholders, and include security, persistence, validation, tests, Docker, and run instructions. Keep everything consistent and ready to evolve.',
+    diagnose: 'I will provide code, files, or logs. Perform evidence-based diagnostics: trace the flow, identify the root cause, rank findings by impact, and apply the smallest safe fix. Check regressions, security, concurrency, performance, and compatibility. Return every corrected file in full.',
+    evolve: 'I want to evolve an existing project. Analyze the attached files, preserve compatible contracts and behavior, identify technical debt, and implement the requested feature with cohesive changes. Update required configuration and tests, explain breaking migrations, and return only complete created or changed files.'
+  }
+};
+
 const automaticProfiles = {
   light: { label: 'análise direta', maxTokens: 3072, temperature: 0.2, estimate: 22, instruction: 'Priorize objetividade e a menor solução correta.' },
   medium: { label: 'análise ampliada', maxTokens: 6144, temperature: 0.22, estimate: 42, instruction: 'Equilibre profundidade, explicação, implementação e verificação.' },
@@ -148,8 +184,9 @@ function progressPlan(requestText) {
 }
 
 function loadPreferences() {
-  try { return { autoZip: false, ...JSON.parse(localStorage.getItem('axis-preferences')) }; }
-  catch { return { autoZip: false }; }
+  const defaults = { autoZip: false, language: 'pt-BR', theme: 'axis', chatBackground: '' };
+  try { return { ...defaults, ...JSON.parse(localStorage.getItem('axis-preferences')) }; }
+  catch { return defaults; }
 }
 
 function createId() {
@@ -164,7 +201,8 @@ const state = {
   isGenerating: false,
   controller: null,
   preferences: loadPreferences(),
-  internalAI: { available: false, agents: 0, online: 0, checked: false }
+  internalAI: { available: false, agents: 0, online: 0, checked: false },
+  auth: { configured: false, csrf: '', user: null, recaptchaWidget: null }
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -271,6 +309,201 @@ function savePreferences() {
   catch { /* O toggle continua funcionando mesmo com armazenamento bloqueado. */ }
 }
 
+function t(key) {
+  return translations[state.preferences.language]?.[key] || translations['pt-BR'][key] || key;
+}
+
+function applyLanguage(language) {
+  state.preferences.language = language === 'en' ? 'en' : 'pt-BR';
+  document.documentElement.lang = state.preferences.language;
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const translated = t(element.dataset.i18n);
+    if (translated) element.textContent = translated;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(element => {
+    const translated = t(element.dataset.i18nHtml);
+    if (translated) element.innerHTML = translated;
+  });
+  document.querySelectorAll('[data-prompt-key]').forEach(element => {
+    const prompt = preloadedPrompts[state.preferences.language]?.[element.dataset.promptKey];
+    if (prompt) element.dataset.prompt = prompt;
+  });
+  $('#languageSelect').value = state.preferences.language;
+  $('#authLanguageSelect').value = state.preferences.language;
+  els.input.placeholder = state.attachments.length
+    ? (state.preferences.language === 'en' ? 'Explain what I should do with the attached files…' : 'Explique o que devo fazer com os arquivos anexados…')
+    : (state.preferences.language === 'en' ? 'Describe what you want to build or paste your code…' : 'Descreva o que você quer construir ou cole seu código…');
+  document.title = state.preferences.language === 'en' ? 'Axis Code — AI software engineering' : 'Axis Code — Engenharia de software com IA';
+  savePreferences();
+  renderHistory();
+}
+
+function applyTheme() {
+  document.body.dataset.theme = state.preferences.theme || 'axis';
+  $$('.theme-card').forEach(card => card.classList.toggle('active', card.dataset.themeChoice === state.preferences.theme));
+  if (state.preferences.chatBackground) {
+    document.documentElement.style.setProperty('--custom-chat-background', `url("${state.preferences.chatBackground}")`);
+    els.chatArea.classList.add('has-custom-background');
+  } else {
+    document.documentElement.style.removeProperty('--custom-chat-background');
+    els.chatArea.classList.remove('has-custom-background');
+  }
+}
+
+async function authRequest(action, { method = 'GET', body = null, formData = null } = {}) {
+  const options = { method, credentials: 'same-origin', headers: {} };
+  if (method !== 'GET') options.headers['X-CSRF-Token'] = state.auth.csrf;
+  if (formData) options.body = formData;
+  else if (body !== null) {
+    options.headers['Content-Type'] = 'application/json';
+    options.body = JSON.stringify({ ...body, csrf: state.auth.csrf });
+  }
+  const response = await fetch(`auth.php?action=${encodeURIComponent(action)}`, options);
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+  if (result.csrf) state.auth.csrf = result.csrf;
+  return result;
+}
+
+function userInitial(user = state.auth.user) {
+  return (user?.displayName || user?.email || 'R').trim().charAt(0).toUpperCase() || 'R';
+}
+
+function setAvatar(element, user = state.auth.user) {
+  if (!element) return;
+  if (user?.avatarUrl) {
+    element.textContent = '';
+    element.style.backgroundImage = `url("${user.avatarUrl}")`;
+    element.classList.add('has-photo');
+  } else {
+    element.style.backgroundImage = '';
+    element.classList.remove('has-photo');
+    element.textContent = userInitial(user);
+  }
+}
+
+function updateAccountUI() {
+  const user = state.auth.user;
+  if (!user) return;
+  $('#sidebarUserName').textContent = user.displayName;
+  $('#sidebarUserEmail').textContent = user.email;
+  $('#accountDisplayName').value = user.displayName;
+  $('#accountEmail').value = user.email;
+  $('#currentPassword').value = '';
+  $('#newPassword').value = '';
+  setAvatar($('#sidebarAvatar'), user);
+  setAvatar($('#accountAvatar'), user);
+}
+
+async function renderRecaptcha() {
+  if (!state.auth.recaptchaSiteKey || state.auth.recaptchaWidget !== null) return;
+  const grecaptcha = await loadBrowserLibrary(`https://www.google.com/recaptcha/api.js?render=explicit&hl=${state.preferences.language === 'en' ? 'en' : 'pt-BR'}`, 'grecaptcha');
+  state.auth.recaptchaWidget = grecaptcha.render('recaptchaSlot', {
+    sitekey: state.auth.recaptchaSiteKey,
+    theme: 'dark'
+  });
+}
+
+function recaptchaToken() {
+  if (!state.auth.recaptchaSiteKey) return '';
+  return window.grecaptcha?.getResponse(state.auth.recaptchaWidget) || '';
+}
+
+function resetRecaptcha() {
+  if (state.auth.recaptchaWidget !== null) window.grecaptcha?.reset(state.auth.recaptchaWidget);
+}
+
+function showAuthResult(message, isError = false) {
+  const result = $('#authResult');
+  result.textContent = message;
+  result.classList.toggle('error', isError);
+  result.classList.toggle('success', !isError && Boolean(message));
+}
+
+async function enterApplication(user) {
+  state.auth.user = user;
+  $('#authScreen').hidden = true;
+  $('#appShell').hidden = false;
+  updateAccountUI();
+  renderHistory();
+  updateConnectionUI();
+  await detectInternalAI();
+  requestAnimationFrame(() => {
+    positionScrollButton();
+    els.input.focus();
+  });
+}
+
+async function initializeAuthentication() {
+  try {
+    const config = await authRequest('config');
+    state.auth = { ...state.auth, ...config, recaptchaWidget: null };
+    $('#googleLoginButton').hidden = !config.googleEnabled;
+    if (!config.configured) {
+      $('#authConfigMessage').hidden = false;
+      $('#authConfigMessage').textContent = state.preferences.language === 'en'
+        ? 'Authentication is waiting for the MySQL DB_* variables in Render.'
+        : 'A autenticação está aguardando as variáveis DB_* do MySQL no Render.';
+      $$('.auth-form input, .auth-submit').forEach(element => { element.disabled = true; });
+      return;
+    }
+    if (config.recaptchaSiteKey) await renderRecaptcha();
+    const session = await authRequest('me');
+    if (session.authenticated) await enterApplication(session.user);
+    else {
+      $('#authScreen').hidden = false;
+      $('#appShell').hidden = true;
+    }
+  } catch (error) {
+    $('#authConfigMessage').hidden = false;
+    $('#authConfigMessage').textContent = error.message;
+    showAuthResult(error.message, true);
+  }
+}
+
+async function submitAuthentication(mode, form) {
+  showAuthResult('');
+  const values = Object.fromEntries(new FormData(form).entries());
+  if (mode === 'register' && values.password !== values.confirmPassword) {
+    showAuthResult(state.preferences.language === 'en' ? 'Passwords do not match.' : 'As senhas não coincidem.', true);
+    return;
+  }
+  const submit = form.querySelector('[type="submit"]');
+  submit.disabled = true;
+  try {
+    const result = await authRequest(mode, { method: 'POST', body: { ...values, recaptchaToken: recaptchaToken() } });
+    await enterApplication(result.user);
+    form.reset();
+  } catch (error) {
+    showAuthResult(error.message, true);
+    resetRecaptcha();
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+function openAccountModal() {
+  updateAccountUI();
+  $('#accountResult').textContent = '';
+  $('#accountModal').hidden = false;
+  setTimeout(() => $('#accountDisplayName').focus(), 50);
+}
+
+let confirmationResolver = null;
+function confirmAction(title, message, confirmLabel = t('confirm')) {
+  $('#confirmTitle').textContent = title;
+  $('#confirmMessage').textContent = message;
+  $('#confirmAccept').textContent = confirmLabel;
+  $('#confirmModal').hidden = false;
+  return new Promise(resolve => { confirmationResolver = resolve; });
+}
+
+function finishConfirmation(value) {
+  $('#confirmModal').hidden = true;
+  confirmationResolver?.(value);
+  confirmationResolver = null;
+}
+
 async function detectInternalAI() {
   try {
     const response = await fetch('api.php?action=ai-status', { cache: 'no-store' });
@@ -279,22 +512,27 @@ async function detectInternalAI() {
   updateConnectionUI();
 }
 
+function historyStorageKey() {
+  return `axis-conversations-${state.auth.user?.id || 'guest'}`;
+}
+
 function loadHistory() {
-  try { return JSON.parse(localStorage.getItem('axis-conversations')) || []; }
+  try { return JSON.parse(localStorage.getItem(historyStorageKey())) || []; }
   catch { return []; }
 }
 
-function saveCurrentConversation() {
-  if (!state.messages.length) return;
+function saveCurrentConversation(force = false) {
+  if (!state.messages.length && !force) return;
   const history = loadHistory();
   const firstMessage = state.messages.find(message => message.role === 'user');
   const first = firstMessage?.displayContent || firstMessage?.content || 'Nova conversa';
-  const record = { id: state.conversationId, title: state.conversationTitle || createFallbackTitle(first), updatedAt: Date.now(), messages: state.messages };
+  const defaultTitle = state.preferences.language === 'en' ? 'New conversation' : 'Nova conversa';
+  const record = { id: state.conversationId, title: state.conversationTitle || (state.messages.length ? createFallbackTitle(first) : defaultTitle), updatedAt: Date.now(), messages: state.messages };
   const records = [record, ...history.filter(item => item.id !== record.id)].slice(0, 20);
   try {
-    localStorage.setItem('axis-conversations', JSON.stringify(records));
+    localStorage.setItem(historyStorageKey(), JSON.stringify(records));
   } catch {
-    try { localStorage.setItem('axis-conversations', JSON.stringify(records.slice(0, 5))); }
+    try { localStorage.setItem(historyStorageKey(), JSON.stringify(records.slice(0, 5))); }
     catch { showToast('Conversa grande demais para o histórico local'); }
   }
   renderHistory();
@@ -321,18 +559,19 @@ function extractConversationTitle(answer) {
 
 function relativeTime(timestamp) {
   const minutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60000));
-  if (minutes < 1) return 'agora';
-  if (minutes < 60) return `há ${minutes} min`;
+  const english = state.preferences.language === 'en';
+  if (minutes < 1) return english ? 'now' : 'agora';
+  if (minutes < 60) return english ? `${minutes} min ago` : `há ${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `há ${hours}h`;
+  if (hours < 24) return english ? `${hours}h ago` : `há ${hours}h`;
   const days = Math.floor(hours / 24);
-  return `há ${days} dia${days === 1 ? '' : 's'}`;
+  return english ? `${days} day${days === 1 ? '' : 's'} ago` : `há ${days} dia${days === 1 ? '' : 's'}`;
 }
 
 function renderHistory() {
   const history = loadHistory();
   const list = $('#historyList');
-  if (!history.length) { list.innerHTML = '<p class="history-empty">Nenhuma conversa salva</p>'; return; }
+  if (!history.length) { list.innerHTML = `<p class="history-empty">${state.preferences.language === 'en' ? 'No saved conversations' : 'Nenhuma conversa salva'}</p>`; return; }
   list.innerHTML = '';
   history.forEach(item => {
     const row = document.createElement('div');
@@ -344,18 +583,24 @@ function renderHistory() {
     const remove = document.createElement('button');
     remove.className = 'history-delete';
     remove.type = 'button';
-    remove.title = 'Apagar esta conversa';
-    remove.setAttribute('aria-label', `Apagar conversa ${item.title}`);
+    remove.title = state.preferences.language === 'en' ? 'Delete this conversation' : 'Apagar esta conversa';
+    remove.setAttribute('aria-label', state.preferences.language === 'en' ? `Delete conversation ${item.title}` : `Apagar conversa ${item.title}`);
     remove.textContent = '×';
-    remove.addEventListener('click', () => deleteConversation(item.id));
+    remove.addEventListener('click', () => deleteConversation(item.id, item.title));
     row.append(button, remove);
     list.appendChild(row);
   });
 }
 
-function deleteConversation(id) {
+async function deleteConversation(id, title = '') {
+  const confirmed = await confirmAction(
+    state.preferences.language === 'en' ? 'Delete conversation?' : 'Apagar conversa?',
+    state.preferences.language === 'en' ? `The conversation “${title}” will be permanently removed from this browser.` : `A conversa “${title}” será removida permanentemente deste navegador.`,
+    state.preferences.language === 'en' ? 'Delete' : 'Apagar'
+  );
+  if (!confirmed) return;
   const next = loadHistory().filter(item => item.id !== id);
-  localStorage.setItem('axis-conversations', JSON.stringify(next));
+  localStorage.setItem(historyStorageKey(), JSON.stringify(next));
   if (state.conversationId === id) resetChat(false);
   renderHistory();
   showToast('Conversa apagada');
@@ -371,6 +616,8 @@ function loadConversation(id) {
   renderAttachments();
   els.messages.innerHTML = '';
   record.messages.forEach(message => addMessage(message.role, message.displayContent || message.content, false, message.generation));
+  els.empty.style.display = record.messages.length ? 'none' : '';
+  els.messages.classList.toggle('active', record.messages.length > 0);
   els.sidebar.classList.remove('open');
   scrollToLatest('auto');
 }
@@ -381,7 +628,7 @@ function updateConnectionUI() {
   const counter = $('#aiCounter');
   counter.classList.toggle('online', configured > 0 && online === configured);
   counter.classList.toggle('partial', online > 0 && online < configured);
-  $('#activeModelLabel').textContent = configured ? `${online}/${configured} IAs online` : '0 IAs online';
+  $('#activeModelLabel').textContent = '( RafTech_EcoSystem )';
   counter.title = configured ? `${online} de ${configured} agentes OpenRouter responderam à verificação` : 'Nenhuma IA interna configurada';
 }
 
@@ -429,8 +676,10 @@ function startProgress(messageNode) {
   const status = document.createElement('div');
   status.className = 'generation-status';
   status.setAttribute('role', 'status');
-  status.setAttribute('aria-label', 'Axis está processando a solicitação');
-  status.innerHTML = '<div class="thinking-time">Processando há <span>0 s</span></div><div class="thinking-divider"></div><div class="thinking-activity">Preparando a solicitação…</div>';
+  status.setAttribute('aria-label', state.preferences.language === 'en' ? 'Axis is processing the request' : 'Axis está processando a solicitação');
+  status.innerHTML = state.preferences.language === 'en'
+    ? '<div class="thinking-time">Processing for <span>0 s</span></div><div class="thinking-divider"></div><div class="thinking-activity">Preparing the request…</div>'
+    : '<div class="thinking-time">Processando há <span>0 s</span></div><div class="thinking-divider"></div><div class="thinking-activity">Preparando a solicitação…</div>';
   content.appendChild(status);
   const update = () => {
     status.querySelector('.thinking-time span').textContent = formatThinkingDuration((Date.now() - startedAt) / 1000);
@@ -497,7 +746,9 @@ async function requestCompleteAxisAnswer(baseMessages, progress) {
   // que concluiu a resposta. Para a próxima chamada enviamos apenas a cauda da
   // parte anterior, evitando que o contexto cresça até ficar lento ou falhar.
   while (true) {
-    progress.setActivity(part === 0 ? 'Consultando a IA…' : `Continuando o projeto grande (${part + 1})…`);
+    progress.setActivity(state.preferences.language === 'en'
+      ? (part === 0 ? 'Consulting the AI…' : `Continuing the large project (${part + 1})…`)
+      : (part === 0 ? 'Consultando a IA…' : `Continuando o projeto grande (${part + 1})…`));
     const result = await requestAxis(requestMessages);
     completeAnswer = mergeContinuation(completeAnswer, result.content);
     if (!result.partial) return finalizeMarkdown(completeAnswer);
@@ -636,9 +887,9 @@ function addMessage(role, content, typing = false, generation = null) {
   const node = document.createElement('article');
   node.className = `message ${role}`;
   const generationMeta = role === 'assistant' && generation?.elapsed
-    ? `<div class="completion-meta">Tempo total: ${formatDuration(generation.elapsed)}</div>`
+    ? `<div class="completion-meta">${state.preferences.language === 'en' ? 'Total time' : 'Tempo total'}: ${formatDuration(generation.elapsed)}</div>`
     : '';
-  node.innerHTML = `<div class="message-avatar">${role === 'user' ? 'EU' : 'A'}</div><div class="message-content"><span class="message-role">${role === 'user' ? 'Você' : 'Axis'}</span>${generationMeta}${typing ? '<span class="typing"><i></i><i></i><i></i></span>' : renderMarkdown(content)}</div>`;
+  node.innerHTML = `<div class="message-avatar">${role === 'user' ? (state.preferences.language === 'en' ? 'ME' : 'EU') : 'A'}</div><div class="message-content"><span class="message-role">${role === 'user' ? (state.preferences.language === 'en' ? 'You' : 'Você') : 'Axis'}</span>${generationMeta}${typing ? '<span class="typing"><i></i><i></i><i></i></span>' : renderMarkdown(content)}</div>`;
   els.messages.appendChild(node);
   scrollToLatest('smooth');
   return node;
@@ -646,14 +897,19 @@ function addMessage(role, content, typing = false, generation = null) {
 
 async function sendPrompt(prompt) {
   if (state.isGenerating) {
-    state.controller?.abort();
+    const confirmed = await confirmAction(
+      state.preferences.language === 'en' ? 'Stop generation?' : 'Cancelar geração?',
+      state.preferences.language === 'en' ? 'The current response will be interrupted.' : 'A resposta atual será interrompida.',
+      state.preferences.language === 'en' ? 'Stop' : 'Interromper'
+    );
+    if (confirmed) state.controller?.abort();
     return;
   }
   if (!prompt.trim() && !state.attachments.length) return;
   if (!state.internalAI.available) {
     els.input.value = prompt;
     autoResize();
-    showToast('Nenhuma IA online. Verifique providers.local.php');
+    showToast(state.preferences.language === 'en' ? 'RafTech_EcoSystem is temporarily unavailable.' : 'O RafTech_EcoSystem está temporariamente indisponível.');
     return;
   }
 
@@ -665,6 +921,9 @@ async function sendPrompt(prompt) {
   }
   const profile = automaticProfile(fullPrompt);
   fullPrompt += `\n\nPROFUNDIDADE DEFINIDA AUTOMATICAMENTE: ${profile.label}. ${profile.instruction}`;
+  fullPrompt += state.preferences.language === 'en'
+    ? '\n\nRESPONSE LANGUAGE: English. Write all explanations, headings, labels, and generated documentation in English unless the requested source code requires another language.'
+    : '\n\nIDIOMA OBRIGATÓRIO DA RESPOSTA: português do Brasil. Escreva explicações, títulos, rótulos e documentação gerada em português, salvo quando o código exigir outro idioma.';
   if (state.preferences.autoZip) {
     fullPrompt += '\n\nMODO AUTO ZIP ATIVO: quando criar ou alterar arquivos, entregue o conteúdo COMPLETO de cada arquivo em bloco de código. Imediatamente antes de cada bloco, escreva exatamente `### Arquivo: caminho/arquivo.ext`. Não omita código e não inclua no ZIP arquivos que não foram criados ou alterados.';
   }
@@ -675,6 +934,7 @@ async function sendPrompt(prompt) {
   const displayContent = `${prompt.trim() || 'Analise os arquivos anexados.'}${attachmentNames.length ? `\n\n📎 ${attachmentNames.join(', ')}` : ''}`;
   state.messages.push({ role: 'user', content: fullPrompt, displayContent });
   addMessage('user', displayContent);
+  saveCurrentConversation(true);
   state.attachments = [];
   renderAttachments();
   els.input.value = '';
@@ -695,7 +955,7 @@ async function sendPrompt(prompt) {
       ...state.messages.map(({ role, content }) => ({ role, content }))
     ];
     const answer = await requestCompleteAxisAnswer(messagesPayload, progress);
-    progress.setActivity('Organizando a resposta…');
+    progress.setActivity(state.preferences.language === 'en' ? 'Organizing the response…' : 'Organizando a resposta…');
     const elapsed = finishProgress(progress);
     const titleResult = extractConversationTitle(answer);
     const visibleAnswer = titleResult.content;
@@ -703,12 +963,14 @@ async function sendPrompt(prompt) {
     else if (isFirstMessage && !state.conversationTitle) state.conversationTitle = createFallbackTitle(prompt);
     const generation = { elapsed };
     state.messages.push({ role: 'assistant', content: visibleAnswer, generation });
-    waiting.querySelector('.message-content').innerHTML = `<span class="message-role">Axis</span><div class="completion-meta">Tempo total: ${formatDuration(elapsed)}</div>${renderMarkdown(visibleAnswer)}`;
+    waiting.querySelector('.message-content').innerHTML = `<span class="message-role">Axis</span><div class="completion-meta">${state.preferences.language === 'en' ? 'Total time' : 'Tempo total'}: ${formatDuration(elapsed)}</div>${renderMarkdown(visibleAnswer)}`;
     if (state.preferences.autoZip) addZipDownload(waiting, visibleAnswer);
     saveCurrentConversation();
   } catch (error) {
     finishProgress(progress);
-    const message = error.name === 'AbortError' ? 'Geração cancelada.' : `Não foi possível consultar a API: ${error.message}`;
+    const message = error.name === 'AbortError'
+      ? (state.preferences.language === 'en' ? 'Generation stopped.' : 'Geração cancelada.')
+      : (state.preferences.language === 'en' ? `The API request failed: ${error.message}` : `Não foi possível consultar a API: ${error.message}`);
     waiting.querySelector('.message-content').innerHTML = `<span class="message-role">Axis</span><p>${escapeHtml(message)}</p>`;
   } finally {
     state.isGenerating = false;
@@ -721,7 +983,7 @@ async function sendPrompt(prompt) {
   }
 }
 
-function resetChat(saveExisting = true) {
+function resetChat(saveExisting = true, persistNew = false) {
   if (saveExisting) saveCurrentConversation();
   state.controller?.abort();
   state.messages = [];
@@ -735,6 +997,35 @@ function resetChat(saveExisting = true) {
   els.input.value = '';
   autoResize();
   els.input.focus();
+  if (persistNew) saveCurrentConversation(true);
+  renderHistory();
+  els.sidebar.classList.remove('open');
+  els.chatArea.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+async function createNewChat() {
+  if (state.isGenerating) {
+    const confirmed = await confirmAction(
+      state.preferences.language === 'en' ? 'Start a new conversation?' : 'Criar nova conversa?',
+      state.preferences.language === 'en' ? 'The current generation will be stopped and the conversation will be saved.' : 'A geração atual será interrompida e a conversa será salva.',
+      state.preferences.language === 'en' ? 'Create' : 'Criar'
+    );
+    if (!confirmed) return;
+  }
+  resetChat(true, true);
+}
+
+async function clearCurrentChat() {
+  const confirmed = await confirmAction(
+    state.preferences.language === 'en' ? 'Clear this conversation?' : 'Limpar esta conversa?',
+    state.preferences.language === 'en' ? 'All messages in the current conversation will be permanently removed.' : 'Todas as mensagens da conversa atual serão removidas permanentemente.',
+    state.preferences.language === 'en' ? 'Clear' : 'Limpar'
+  );
+  if (!confirmed) return;
+  const remaining = loadHistory().filter(item => item.id !== state.conversationId);
+  localStorage.setItem(historyStorageKey(), JSON.stringify(remaining));
+  resetChat(false, true);
+  showToast(state.preferences.language === 'en' ? 'Conversation cleared' : 'Conversa limpa');
 }
 
 $('#denyMaven').addEventListener('click', () => {
@@ -744,8 +1035,12 @@ $('#denyMaven').addEventListener('click', () => {
 $('#allowMaven').addEventListener('click', executeApprovedMaven);
 $('#mavenPermissionModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeMavenPermission(); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && !$('#mavenPermissionModal').hidden) closeMavenPermission();
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); resetChat(true); }
+  if (e.key === 'Escape') {
+    if (!$('#confirmModal').hidden) finishConfirmation(false);
+    else if (!$('#mavenPermissionModal').hidden) closeMavenPermission();
+    else $$('.modal-backdrop:not([hidden])').forEach(modal => { modal.hidden = true; });
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); createNewChat(); }
 });
 
 els.form.addEventListener('submit', e => { e.preventDefault(); sendPrompt(els.input.value); });
@@ -793,7 +1088,7 @@ function loadBrowserLibrary(url, globalName) {
     const script = document.createElement('script');
     script.src = url;
     script.async = true;
-    script.crossOrigin = 'anonymous';
+    if (!url.includes('google.com/recaptcha')) script.crossOrigin = 'anonymous';
     script.onload = () => window[globalName] ? resolve(window[globalName]) : reject(new Error(`A biblioteca ${globalName} não foi carregada.`));
     script.onerror = () => reject(new Error(`Não foi possível carregar o leitor de documentos (${globalName}).`));
     document.head.appendChild(script);
@@ -923,27 +1218,145 @@ els.fileInput.addEventListener('change', async () => {
   els.input.placeholder = state.attachments.length ? 'Explique o que devo fazer com os arquivos anexados…' : 'Descreva o que você quer construir ou cole seu código…';
   showToast(rejected ? `${state.attachments.length} pronto(s); ${rejected} rejeitado(s). ${errors[0] || ''}` : `${accepted.length} arquivo(s) anexado(s)`);
 });
-$('#newChatButton').addEventListener('click', () => resetChat(true));
-$('#clearChat').addEventListener('click', () => resetChat(false));
-$('#clearHistory').addEventListener('click', () => {
+$('#newChatButton').addEventListener('click', createNewChat);
+$('#clearChat').addEventListener('click', clearCurrentChat);
+$('#clearHistory').addEventListener('click', async () => {
   if (!loadHistory().length) return;
-  if (confirm('Apagar todo o histórico de conversas salvo neste navegador?')) {
-    localStorage.removeItem('axis-conversations');
-    renderHistory();
-    showToast('Histórico removido');
+  const confirmed = await confirmAction(
+    state.preferences.language === 'en' ? 'Clear all recent conversations?' : 'Limpar todas as conversas recentes?',
+    state.preferences.language === 'en' ? 'This action permanently removes the local conversation history.' : 'Esta ação remove permanentemente o histórico de conversas deste navegador.',
+    state.preferences.language === 'en' ? 'Clear all' : 'Limpar tudo'
+  );
+  if (!confirmed) return;
+  localStorage.removeItem(historyStorageKey());
+  resetChat(false, true);
+  showToast(state.preferences.language === 'en' ? 'History cleared' : 'Histórico removido');
+});
+
+$$('[data-auth-tab]').forEach(tab => tab.addEventListener('click', () => {
+  $$('[data-auth-tab]').forEach(item => {
+    const active = item === tab;
+    item.classList.toggle('active', active);
+    item.setAttribute('aria-selected', String(active));
+  });
+  $$('[data-auth-panel]').forEach(panel => {
+    const active = panel.dataset.authPanel === tab.dataset.authTab;
+    panel.hidden = !active;
+    panel.classList.toggle('active', active);
+  });
+  showAuthResult('');
+  resetRecaptcha();
+}));
+$('#loginForm').addEventListener('submit', event => { event.preventDefault(); submitAuthentication('login', event.currentTarget); });
+$('#registerForm').addEventListener('submit', event => { event.preventDefault(); submitAuthentication('register', event.currentTarget); });
+
+$('#languageSelect').addEventListener('change', event => applyLanguage(event.target.value));
+$('#authLanguageSelect').addEventListener('change', event => applyLanguage(event.target.value));
+$('#accountButton').addEventListener('click', openAccountModal);
+$('#themeButton').addEventListener('click', () => { $('#themeModal').hidden = false; });
+$$('[data-close-modal]').forEach(button => button.addEventListener('click', () => { $(`#${button.dataset.closeModal}`).hidden = true; }));
+$('#confirmCancel').addEventListener('click', () => finishConfirmation(false));
+$('#confirmAccept').addEventListener('click', () => finishConfirmation(true));
+
+$('#accountForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const resultNode = $('#accountResult');
+  resultNode.textContent = '';
+  try {
+    const result = await authRequest('profile', {
+      method: 'POST',
+      body: {
+        displayName: $('#accountDisplayName').value.trim(),
+        currentPassword: $('#currentPassword').value,
+        newPassword: $('#newPassword').value
+      }
+    });
+    state.auth.user = result.user;
+    updateAccountUI();
+    resultNode.textContent = state.preferences.language === 'en' ? 'Account updated successfully.' : 'Conta atualizada com sucesso.';
+    resultNode.className = 'auth-result success';
+  } catch (error) {
+    resultNode.textContent = error.message;
+    resultNode.className = 'auth-result error';
   }
 });
+
+$('#avatarInput').addEventListener('change', async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const resultNode = $('#accountResult');
+  try {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    formData.append('csrf', state.auth.csrf);
+    const result = await authRequest('avatar', { method: 'POST', formData });
+    state.auth.user = result.user;
+    updateAccountUI();
+    resultNode.textContent = state.preferences.language === 'en' ? 'Photo updated.' : 'Foto atualizada.';
+    resultNode.className = 'auth-result success';
+  } catch (error) {
+    resultNode.textContent = error.message;
+    resultNode.className = 'auth-result error';
+  } finally {
+    event.target.value = '';
+  }
+});
+
+$('#logoutButton').addEventListener('click', async () => {
+  const confirmed = await confirmAction(
+    state.preferences.language === 'en' ? 'Sign out?' : 'Sair da conta?',
+    state.preferences.language === 'en' ? 'You will need to sign in again to access your workspace.' : 'Será necessário entrar novamente para acessar seu workspace.',
+    state.preferences.language === 'en' ? 'Sign out' : 'Sair'
+  );
+  if (!confirmed) return;
+  try { await authRequest('logout', { method: 'POST', body: {} }); } catch { /* A sessão local será encerrada mesmo se a resposta falhar. */ }
+  state.auth.user = null;
+  $('#accountModal').hidden = true;
+  $('#appShell').hidden = true;
+  $('#authScreen').hidden = false;
+  showAuthResult(state.preferences.language === 'en' ? 'You have signed out.' : 'Você saiu da conta.');
+});
+
+$$('[data-theme-choice]').forEach(card => card.addEventListener('click', () => {
+  state.preferences.theme = card.dataset.themeChoice;
+  savePreferences();
+  applyTheme();
+}));
+$('#backgroundInput').addEventListener('change', event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2_000_000 || !/^image\/(jpeg|png|webp|gif)$/.test(file.type)) {
+    showToast(state.preferences.language === 'en' ? 'Use a JPG, PNG, WEBP, or GIF image up to 2 MB.' : 'Use uma imagem JPG, PNG, WEBP ou GIF de até 2 MB.');
+    event.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.preferences.chatBackground = String(reader.result || '');
+    savePreferences();
+    applyTheme();
+    showToast(state.preferences.language === 'en' ? 'Conversation background updated' : 'Fundo da conversa atualizado');
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+});
+$('#removeBackground').addEventListener('click', () => {
+  state.preferences.chatBackground = '';
+  savePreferences();
+  applyTheme();
+});
+
 $('#menuButton').addEventListener('click', () => els.sidebar.classList.add('open'));
 $('#sidebarClose').addEventListener('click', () => els.sidebar.classList.remove('open'));
 els.chatArea.addEventListener('scroll', updateScrollButton, { passive: true });
 els.scrollBottom.addEventListener('click', () => scrollToLatest('smooth'));
 window.addEventListener('resize', () => { positionScrollButton(); scrollToLatest('auto'); });
 
-updateConnectionUI();
-detectInternalAI();
-renderHistory();
+applyLanguage(state.preferences.language);
+applyTheme();
 $('#autoZipToggle').classList.toggle('active-tool', state.preferences.autoZip);
 $('#autoZipToggle').setAttribute('aria-pressed', String(state.preferences.autoZip));
 $('#autoZipToggle').title = state.preferences.autoZip ? 'Auto ZIP ligado — clique para desativar' : 'Auto ZIP desligado — clique para ativar';
 autoResize();
 positionScrollButton();
+initializeAuthentication();

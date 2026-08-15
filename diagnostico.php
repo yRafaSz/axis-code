@@ -10,6 +10,10 @@ $result = [
     'configSource' => trim((string)(getenv('AXIS_AGENTS_JSON') ?: '')) !== '' ? 'environment' : 'file',
     'curl' => function_exists('curl_init') && function_exists('curl_exec'),
     'curlMulti' => function_exists('curl_multi_init') && function_exists('curl_multi_exec'),
+    'pdoMysql' => extension_loaded('pdo_mysql'),
+    'authenticationConfigured' => trim((string)(getenv('DB_HOST') ?: '')) !== '' && trim((string)(getenv('DB_NAME') ?: '')) !== '' && trim((string)(getenv('DB_USER') ?: '')) !== '',
+    'recaptchaConfigured' => trim((string)(getenv('RECAPTCHA_SITE_KEY') ?: '')) !== '' && trim((string)(getenv('RECAPTCHA_SECRET_KEY') ?: '')) !== '',
+    'googleLoginConfigured' => trim((string)(getenv('GOOGLE_CLIENT_ID') ?: '')) !== '' && trim((string)(getenv('GOOGLE_CLIENT_SECRET') ?: '')) !== '',
 ];
 
 if ($result['configExists'] && $result['configSource'] === 'file') {

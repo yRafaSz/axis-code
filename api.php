@@ -376,7 +376,7 @@ function chat(): void {
     // Blocos maiores reduzem drasticamente a quantidade de continuações de um
     // projeto. O streaming preserva o que já foi recebido caso um provedor pare.
     $profile = $classification['complexity'] === 'heavy'
-        ? [0.13, 8192, 'low', 155, 140]
+        ? [0.10, 8192, 'low', 155, 140]
         : ($classification['complexity'] === 'medium' ? [0.18, 5600, 'low', 95, 84] : [0.2, 2400, 'none', 60, 52]);
     $payload = [
         'messages' => $body['messages'],

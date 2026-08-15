@@ -10,6 +10,7 @@ PRIORIDADES:
 ESPECIALIDADE PRINCIPAL — JAVA:
 - Domine Java 8–25, JVM, Spring Boot, Spring Security, JPA/Hibernate, JDBC, Maven, Gradle, concorrência, Bukkit/Spigot/Paper, JUnit/Mockito, performance e padrões de arquitetura.
 - Em Java, verifique versão-alvo, null safety, exceções, contratos, gerenciamento de recursos, concorrência, segurança, performance e testes proporcionais ao risco.
+- Em Spigot/Paper, mantenha chamadas da API Bukkit na thread principal, evite I/O bloqueante durante eventos, use UUID para identidade persistente, valide inventários e cliques contra exploits, cancele tarefas no encerramento e mantenha plugin.yml, permissões, comandos, packages e versão da API consistentes.
 
 OUTRAS TECNOLOGIAS:
 - Trabalhe com excelência em PHP/Laravel, HTML, CSS, JavaScript/TypeScript, React, Vue, Node.js, SQL, Python, C/C++, C#, Kotlin, Go, Rust, Swift, Dart, Ruby, Shell e demais tecnologias solicitadas.
@@ -36,6 +37,7 @@ MÉTODO:
 5. Implemente a menor solução realmente completa. Não use “...”, TODO, pseudocódigo, classes vazias ou comentários no lugar de partes essenciais, salvo pedido explícito.
 6. Preserve interfaces públicas e dados. Quando houver mudança incompatível, explique a migração.
 7. Revise antes de responder: compilação provável, imports, tipos, null safety, fluxo de erros, concorrência, segurança, desempenho, acessibilidade e casos extremos pertinentes.
+   Faça uma conferência silenciosa requisito por requisito e corrija inconsistências entre classes, configurações, comandos, permissões e dependências antes de entregar. Não descreva essa revisão nem aumente a resposta com uma seção burocrática.
 8. Nunca invente API, método, biblioteca, versão, arquivo, comando executado, teste ou resultado. Diferencie claramente validação real de recomendação.
 9. Não revele raciocínio privado ou cadeia de pensamento. Forneça conclusões, justificativas técnicas breves e evidências úteis.
 
@@ -386,6 +388,13 @@ function setAvatar(element, user = state.auth.user) {
   }
 }
 
+function setAxisAvatar(element) {
+  if (!element) return;
+  element.textContent = '';
+  element.style.backgroundImage = 'url("favicon.svg")';
+  element.classList.add('has-photo', 'axis-photo');
+}
+
 function updateAccountUI() {
   const user = state.auth.user;
   if (!user) return;
@@ -397,6 +406,7 @@ function updateAccountUI() {
   $('#newPassword').value = '';
   setAvatar($('#sidebarAvatar'), user);
   setAvatar($('#accountAvatar'), user);
+  $$('.message.user .message-avatar').forEach(avatar => setAvatar(avatar, user));
 }
 
 let recaptchaLoading = null;
@@ -859,9 +869,20 @@ function escapeHtml(value) {
   return value.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
 
+function cleanMarkdownArtifacts(text) {
+  return String(text || '').split('```').map((part, index) => {
+    if (index % 2 === 1) return part;
+    return part
+      .replace(/^\s*(#{1,6})\s*\n+\s*((?:Arquivo|File|Caminho|Path)\s*:)/gimu, '$1 $2')
+      .replace(/^\s*(?:#\s*){2,6}(?=(?:Arquivo|File|Caminho|Path)\s*:)/gimu, '### ')
+      .replace(/^\s*(?:#\s*){1,6}$/gm, '')
+      .replace(/\n{3,}/g, '\n\n');
+  }).join('```');
+}
+
 function renderMarkdown(text) {
   const blocks = [];
-  let safe = escapeHtml(text).replace(/```([\w+-]*)\n([\s\S]*?)```/g, (_, lang, code) => {
+  let safe = escapeHtml(cleanMarkdownArtifacts(text)).replace(/```([\w+-]*)\n([\s\S]*?)```/g, (_, lang, code) => {
     const token = `@@CODEBLOCK${blocks.length}@@`;
     blocks.push(`<pre data-lang="${lang || 'code'}"><code>${code.trim()}</code></pre>`);
     return token;
@@ -940,7 +961,7 @@ function mergeContinuation(previous, next) {
 }
 
 function finalizeMarkdown(text) {
-  const normalized = text
+  const normalized = cleanMarkdownArtifacts(text)
     .replace(/([^\n])(?=#{1,6}\s+(?:Arquivo|File|Caminho|Path)\s*:)/g, '$1\n\n')
     .replace(/\n{3,}/g, '\n\n');
   return hasOpenMarkdownFence(normalized) ? `${normalized.replace(/\s+$/, '')}\n\`\`\`` : normalized;
@@ -1103,6 +1124,9 @@ function addMessage(role, content, typing = false, generation = null) {
     ? `<div class="completion-meta">${state.preferences.language === 'en' ? 'Total time' : 'Tempo total'}: ${formatDuration(generation.elapsed)}</div>`
     : '';
   node.innerHTML = `<div class="message-avatar">${role === 'user' ? (state.preferences.language === 'en' ? 'ME' : 'EU') : 'A'}</div><div class="message-content"><span class="message-role">${role === 'user' ? (state.preferences.language === 'en' ? 'You' : 'Você') : 'Axis'}</span>${generationMeta}${typing ? '<span class="typing"><i></i><i></i><i></i></span>' : renderMarkdown(content)}</div>`;
+  const avatar = node.querySelector('.message-avatar');
+  if (role === 'user') setAvatar(avatar, state.auth.user);
+  else setAxisAvatar(avatar);
   els.messages.appendChild(node);
   scrollToLatest('smooth');
   return node;

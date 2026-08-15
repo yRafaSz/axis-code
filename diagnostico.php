@@ -13,7 +13,7 @@ $result = [
     'pdoMysql' => extension_loaded('pdo_mysql'),
     'authenticationConfigured' => trim((string)(getenv('DB_HOST') ?: '')) !== '' && trim((string)(getenv('DB_NAME') ?: '')) !== '' && trim((string)(getenv('DB_USER') ?: '')) !== '',
     'recaptchaConfigured' => trim((string)(getenv('RECAPTCHA_SITE_KEY') ?: '')) !== '' && trim((string)(getenv('RECAPTCHA_SECRET_KEY') ?: '')) !== '',
-    'googleLoginConfigured' => trim((string)(getenv('GOOGLE_CLIENT_ID') ?: '')) !== '' && trim((string)(getenv('GOOGLE_CLIENT_SECRET') ?: '')) !== '',
+    'databaseSslCa' => trim((string)(getenv('DB_SSL_CA') ?: '')) !== '' ? 'custom' : 'automatic',
 ];
 
 if ($result['configExists'] && $result['configSource'] === 'file') {

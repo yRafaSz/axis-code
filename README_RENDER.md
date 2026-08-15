@@ -1,6 +1,6 @@
 # Axis Code no Render
 
-Esta versão executa PHP 8.3 com cURL e PDO MySQL. Possui autenticação por e-mail/senha, reCAPTCHA v2, login Google, perfil, quatro temas e OpenRouter configurado somente por variáveis secretas.
+Esta versão executa PHP 8.3 com cURL e PDO MySQL. Possui autenticação por e-mail/senha, reCAPTCHA v2, perfil, quatro temas e OpenRouter configurado somente por variáveis secretas.
 
 ## 1. Atualizar o serviço web
 
@@ -19,34 +19,31 @@ No serviço web, abra **Environment** e mantenha `AXIS_AGENTS_JSON` em uma únic
 
 O Axis usa `openrouter/free` como última alternativa quando modelos gratuitos específicos recebem 429. Isso melhora disponibilidade, mas não remove a cota da conta OpenRouter. Várias chaves da mesma conta compartilham o limite dessa conta.
 
-## 3. Criar o MySQL no Render
+## 3. Configurar o TiDB Cloud no Render
 
-O Render disponibiliza MySQL como um **Private Service** com Docker e disco persistente.
+Crie o banco `axis_code` no SQL Editor do TiDB Cloud:
 
-1. Use o template oficial `render-examples/mysql` ou siga `https://render.com/docs/deploy-mysql`.
-2. Crie o MySQL na mesma região e workspace do Axis.
-3. Configure no serviço MySQL:
-
-```text
-MYSQL_DATABASE=axis_code
-MYSQL_USER=axis
-MYSQL_PASSWORD=UMA_SENHA_FORTE
-MYSQL_ROOT_PASSWORD=OUTRA_SENHA_FORTE
+```sql
+CREATE DATABASE IF NOT EXISTS axis_code;
 ```
 
-4. Adicione um disco persistente montado exatamente em `/var/lib/mysql`.
-5. Copie o hostname interno exibido pelo MySQL. Ele costuma ser semelhante a `mysql-xxxxx`.
-6. No serviço web Axis, adicione:
+No painel do cluster, abra **Connect > Public Endpoint** e copie os dados exatos. Depois, no serviço web Axis do Render, abra **Environment** e adicione:
 
 ```text
-DB_HOST=mysql-xxxxx
-DB_PORT=3306
+DB_HOST=HOST_EXIBIDO_PELO_TIDB
+DB_PORT=4000
 DB_NAME=axis_code
-DB_USER=axis
-DB_PASSWORD=A_MESMA_SENHA_DE_MYSQL_PASSWORD
+DB_USER=USUARIO_EXATO_EXIBIDO_PELO_TIDB
+DB_PASSWORD=SENHA_GERADA_PELO_TIDB
 ```
 
-O arquivo `auth.php` cria automaticamente a tabela `axis_users` na primeira conexão. Não é necessário importar SQL manualmente.
+`DB_SSL_CA` é opcional. O Axis detecta automaticamente o certificado confiável instalado no Linux do Render. Somente configure essa variável se o TiDB fornecer um certificado CA próprio. Nesse caso, adicione o certificado como Secret File `tidb-ca.pem` no Render e use:
+
+```text
+DB_SSL_CA=/etc/secrets/tidb-ca.pem
+```
+
+Em **Connect > Outbound** no Render, copie todas as faixas de IP e permita essas faixas na lista de acesso do TiDB Cloud. O arquivo `auth.php` cria automaticamente a tabela `axis_users` na primeira conexão.
 
 ## 4. Configurar reCAPTCHA v2
 
@@ -63,43 +60,15 @@ RECAPTCHA_SECRET_KEY=SUA_CHAVE_SECRETA
 
 Se essas variáveis não forem informadas, login e cadastro ainda funcionam, mas o desafio antirobô fica desativado.
 
-## 5. Configurar login com Google
-
-1. Acesse `https://console.cloud.google.com/` e crie ou selecione um projeto.
-2. Configure a tela de consentimento OAuth. Para testes, adicione sua conta em **Test users**.
-3. Vá a **APIs & Services > Credentials > Create Credentials > OAuth client ID**.
-4. Escolha **Web application**.
-5. Em **Authorized JavaScript origins**, adicione:
-
-```text
-https://axis-code.onrender.com
-```
-
-6. Em **Authorized redirect URIs**, adicione exatamente:
-
-```text
-https://axis-code.onrender.com/auth.php?action=google-callback
-```
-
-7. No serviço Axis, adicione:
-
-```text
-GOOGLE_CLIENT_ID=SEU_CLIENT_ID.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=SEU_CLIENT_SECRET
-GOOGLE_REDIRECT_URI=https://axis-code.onrender.com/auth.php?action=google-callback
-```
-
-Troque `axis-code.onrender.com` se o endereço real do serviço for diferente. A URI configurada no Google e a variável `GOOGLE_REDIRECT_URI` precisam ser idênticas.
-
-## 6. Segurança e perfil
+## 5. Segurança e perfil
 
 - Senhas são armazenadas com `password_hash`, nunca em texto puro.
 - O e-mail é imutável pela página de perfil.
 - Avatares JPG, PNG, WEBP ou GIF de até 2 MB são armazenados no MySQL.
 - As rotas de IA exigem uma sessão autenticada.
-- Chaves OpenRouter, segredo Google, senha MySQL e segredo reCAPTCHA ficam somente no Render.
+- Chaves OpenRouter, senha do TiDB e segredo reCAPTCHA ficam somente no Render.
 - Revogue qualquer chave que já tenha aparecido em capturas ou commits públicos.
 
 ## Desenvolvimento local
 
-Para rodar localmente, configure as mesmas variáveis `DB_*`, Google e reCAPTCHA no ambiente do PHP. Para OpenRouter, você pode copiar `providers.local.example.php` para `providers.local.php`; nunca envie esse arquivo com chaves reais ao GitHub.
+Para rodar localmente, configure as mesmas variáveis `DB_*` e reCAPTCHA no ambiente do PHP. Para OpenRouter, você pode copiar `providers.local.example.php` para `providers.local.php`; nunca envie esse arquivo com chaves reais ao GitHub.

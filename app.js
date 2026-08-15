@@ -82,7 +82,7 @@ const translations = {
   'pt-BR': {
     language: 'Idioma', authHeadline: 'Seu ambiente profissional de programação.', authDescription: 'Entre para acessar suas conversas, preferências e ferramentas de engenharia de software com IA.',
     authBenefitOne: 'Arquitetura e implementação completas', authBenefitTwo: 'Análise segura de código e documentos', authBenefitThree: 'Workspace pessoal e configurável',
-    login: 'Entrar', register: 'Criar conta', email: 'E-mail', password: 'Senha', displayName: 'Nome de usuário', confirmPassword: 'Confirmar senha', enterAccount: 'Entrar na conta', createAccount: 'Criar minha conta', or: 'ou', continueGoogle: 'Continuar com Google',
+      login: 'Entrar', register: 'Criar conta', email: 'E-mail', password: 'Senha', displayName: 'Nome de usuário', confirmPassword: 'Confirmar senha', enterAccount: 'Entrar na conta', createAccount: 'Criar minha conta',
     newChat: 'Nova conversa', workspace: 'WORKSPACE', codeChat: 'Chat de programação', generateProject: 'Gerar projeto', reviewCode: 'Revisar código', deepDebug: 'Diagnóstico profundo', recent: 'RECENTES', clear: 'Limpar', myWorkspace: 'Meu workspace', privateEnvironment: 'Ambiente privado', ecosystem: 'ECOSSISTEMA',
     heroKicker: 'ENGENHARIA DE SOFTWARE AUMENTADA', heroTitle: 'Construa além<br/>do <em>óbvio.</em>', heroDescription: 'Um agente técnico que analisa arquitetura, segurança, desempenho e manutenção antes de escrever a primeira linha.',
     buildLabel: 'CONSTRUIR', buildTitle: 'Sistema completo', buildDescription: 'Arquitetura, implementação, banco, segurança, testes e implantação.', diagnoseLabel: 'DIAGNOSTICAR', diagnoseTitle: 'Corrigir com precisão', diagnoseDescription: 'Causa raiz, evidências, regressões e correções prontas para produção.', evolveLabel: 'EVOLUIR', evolveTitle: 'Projeto existente', evolveDescription: 'Novas funcionalidades sem quebrar contratos, dados ou compatibilidade.',
@@ -92,7 +92,7 @@ const translations = {
   en: {
     language: 'Language', authHeadline: 'Your professional coding environment.', authDescription: 'Sign in to access your conversations, preferences, and AI software engineering tools.',
     authBenefitOne: 'Complete architecture and implementation', authBenefitTwo: 'Secure code and document analysis', authBenefitThree: 'Personal and configurable workspace',
-    login: 'Sign in', register: 'Create account', email: 'Email', password: 'Password', displayName: 'Username', confirmPassword: 'Confirm password', enterAccount: 'Sign in', createAccount: 'Create my account', or: 'or', continueGoogle: 'Continue with Google',
+      login: 'Sign in', register: 'Create account', email: 'Email', password: 'Password', displayName: 'Username', confirmPassword: 'Confirm password', enterAccount: 'Sign in', createAccount: 'Create my account',
     newChat: 'New conversation', workspace: 'WORKSPACE', codeChat: 'Coding chat', generateProject: 'Generate project', reviewCode: 'Review code', deepDebug: 'Deep diagnostics', recent: 'RECENT', clear: 'Clear', myWorkspace: 'My workspace', privateEnvironment: 'Private environment', ecosystem: 'ECOSYSTEM',
     heroKicker: 'AUGMENTED SOFTWARE ENGINEERING', heroTitle: 'Build beyond<br/>the <em>obvious.</em>', heroDescription: 'A technical agent that considers architecture, security, performance, and maintenance before writing the first line.',
     buildLabel: 'BUILD', buildTitle: 'Complete system', buildDescription: 'Architecture, implementation, database, security, tests, and deployment.', diagnoseLabel: 'DIAGNOSE', diagnoseTitle: 'Fix precisely', diagnoseDescription: 'Root cause, evidence, regressions, and production-ready fixes.', evolveLabel: 'EVOLVE', evolveTitle: 'Existing project', evolveDescription: 'New features without breaking contracts, data, or compatibility.',
@@ -395,9 +395,51 @@ function updateAccountUI() {
   setAvatar($('#accountAvatar'), user);
 }
 
+let recaptchaLoading = null;
+
+function loadRecaptcha(language) {
+  if (typeof window.grecaptcha?.render === 'function') return Promise.resolve(window.grecaptcha);
+  if (recaptchaLoading) return recaptchaLoading;
+
+  recaptchaLoading = new Promise((resolve, reject) => {
+    const callbackName = `axisRecaptchaReady_${Date.now()}`;
+    const timeout = window.setTimeout(() => {
+      delete window[callbackName];
+      recaptchaLoading = null;
+      reject(new Error('O reCAPTCHA demorou demais para carregar. Verifique o bloqueador de anúncios e atualize a página.'));
+    }, 15000);
+
+    window[callbackName] = () => {
+      window.clearTimeout(timeout);
+      delete window[callbackName];
+      if (typeof window.grecaptcha?.render === 'function') resolve(window.grecaptcha);
+      else {
+        recaptchaLoading = null;
+        reject(new Error('O reCAPTCHA não foi carregado corretamente. Desative o bloqueador para este site e atualize a página.'));
+      }
+    };
+
+    const previous = document.querySelector('script[data-axis-recaptcha]');
+    if (previous) previous.remove();
+    const script = document.createElement('script');
+    script.dataset.axisRecaptcha = 'true';
+    script.src = `https://www.google.com/recaptcha/api.js?onload=${encodeURIComponent(callbackName)}&render=explicit&hl=${encodeURIComponent(language)}`;
+    script.async = true;
+    script.defer = true;
+    script.onerror = () => {
+      window.clearTimeout(timeout);
+      delete window[callbackName];
+      recaptchaLoading = null;
+      reject(new Error('Não foi possível carregar o reCAPTCHA. Verifique o bloqueador de anúncios e a chave cadastrada.'));
+    };
+    document.head.appendChild(script);
+  });
+  return recaptchaLoading;
+}
+
 async function renderRecaptcha() {
   if (!state.auth.recaptchaSiteKey || state.auth.recaptchaWidget !== null) return;
-  const grecaptcha = await loadBrowserLibrary(`https://www.google.com/recaptcha/api.js?render=explicit&hl=${state.preferences.language === 'en' ? 'en' : 'pt-BR'}`, 'grecaptcha');
+  const grecaptcha = await loadRecaptcha(state.preferences.language === 'en' ? 'en' : 'pt-BR');
   state.auth.recaptchaWidget = grecaptcha.render('recaptchaSlot', {
     sitekey: state.auth.recaptchaSiteKey,
     theme: 'dark'
@@ -438,7 +480,6 @@ async function initializeAuthentication() {
   try {
     const config = await authRequest('config');
     state.auth = { ...state.auth, ...config, recaptchaWidget: null };
-    $('#googleLoginButton').hidden = !config.googleEnabled;
     if (!config.configured) {
       $('#authConfigMessage').hidden = false;
       $('#authConfigMessage').textContent = state.preferences.language === 'en'

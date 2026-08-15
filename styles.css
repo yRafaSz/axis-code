@@ -297,11 +297,6 @@ h1 em { color: var(--acid); font-weight: 400; }
 .auth-submit { width: 100%; margin-top: 4px; padding: 12px; font-size: 11px; }
 .auth-submit:disabled { opacity: .5; cursor: wait; }
 .recaptcha-slot { display: flex; justify-content: center; min-height: 8px; margin-top: 15px; overflow: hidden; }
-.auth-divider { display: flex; align-items: center; gap: 10px; margin: 19px 0; color: #5f746c; font-size: 9px; }
-.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-.google-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 13px; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--text); background: rgba(255,255,255,.025); text-decoration: none; font-size: 11px; font-weight: 700; }
-.google-button:hover { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.05); }
-.google-button svg { width: 18px; stroke: none; }
 .auth-result, .auth-config-message { min-height: 18px; margin: 14px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; text-align: center; }
 .auth-result.error, .auth-config-message { color: #ff9c89; }.auth-result.success { color: var(--acid); }
 .auth-config-message { padding: 10px; border: 1px solid rgba(255,132,109,.2); border-radius: 8px; background: rgba(255,132,109,.05); }

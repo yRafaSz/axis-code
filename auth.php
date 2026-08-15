@@ -52,6 +52,18 @@ function auth_configured(): bool {
         && env_value('DB_USER') !== '';
 }
 
+function system_ca_bundle(): string {
+    $paths = [
+        '/etc/ssl/certs/ca-certificates.crt',
+        '/etc/pki/tls/certs/ca-bundle.crt',
+        '/etc/ssl/cert.pem',
+    ];
+    foreach ($paths as $path) {
+        if (is_readable($path)) return $path;
+    }
+    return '';
+}
+
 function db(): PDO {
     static $pdo = null;
     if ($pdo instanceof PDO) return $pdo;
@@ -66,7 +78,13 @@ function db(): PDO {
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
     $sslCa = env_value('DB_SSL_CA');
-    if ($sslCa !== '' && defined('PDO::MYSQL_ATTR_SSL_CA')) $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+    if ($sslCa === '') $sslCa = system_ca_bundle();
+    if ($sslCa !== '' && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+        $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+        if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+        }
+    }
 
     try {
         $pdo = new PDO(
@@ -89,16 +107,13 @@ CREATE TABLE IF NOT EXISTS axis_users (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     email VARCHAR(320) NOT NULL,
     password_hash VARCHAR(255) NULL,
-    google_sub VARCHAR(255) NULL,
     display_name VARCHAR(80) NOT NULL,
     avatar_mime VARCHAR(50) NULL,
     avatar_data MEDIUMBLOB NULL,
-    avatar_external_url VARCHAR(2048) NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uq_axis_users_email (email),
-    UNIQUE KEY uq_axis_users_google_sub (google_sub)
+    UNIQUE KEY uq_axis_users_email (email)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 SQL);
 }
@@ -133,11 +148,11 @@ function require_user(): int {
 
 function avatar_url(array $user): string {
     if (!empty($user['has_avatar'])) return 'auth.php?action=avatar&id=' . (int)$user['id'] . '&v=' . urlencode((string)($user['updated_at'] ?? time()));
-    return (string)($user['avatar_external_url'] ?? '');
+    return '';
 }
 
 function user_payload(int $id): ?array {
-    $statement = db()->prepare('SELECT id, email, display_name, avatar_external_url, avatar_data IS NOT NULL AS has_avatar, password_hash IS NOT NULL AS has_password, updated_at FROM axis_users WHERE id = ? LIMIT 1');
+    $statement = db()->prepare('SELECT id, email, display_name, avatar_data IS NOT NULL AS has_avatar, password_hash IS NOT NULL AS has_password, updated_at FROM axis_users WHERE id = ? LIMIT 1');
     $statement->execute([$id]);
     $user = $statement->fetch();
     if (!$user) return null;
@@ -188,102 +203,8 @@ function login_user(int $id): void {
     $_SESSION['csrf'] = bin2hex(random_bytes(24));
 }
 
-function app_url(): string {
-    $renderUrl = rtrim(env_value('RENDER_EXTERNAL_URL'), '/');
-    if ($renderUrl !== '') return $renderUrl;
-    $scheme = is_https() ? 'https' : 'http';
-    return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
-}
-
-function google_redirect_uri(): string {
-    return env_value('GOOGLE_REDIRECT_URI', app_url() . '/auth.php?action=google-callback');
-}
-
-function curl_form(string $url, array $fields): array {
-    $handle = curl_init($url);
-    curl_setopt_array($handle, [
-        CURLOPT_POST => true,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_TIMEOUT => 25,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
-        CURLOPT_POSTFIELDS => http_build_query($fields),
-    ]);
-    $raw = curl_exec($handle);
-    $status = (int)curl_getinfo($handle, CURLINFO_HTTP_CODE);
-    curl_close($handle);
-    return [$status, json_decode(is_string($raw) ? $raw : '', true)];
-}
-
-function google_callback(): never {
-    $state = (string)($_GET['state'] ?? '');
-    $expected = (string)($_SESSION['google_oauth_state'] ?? '');
-    unset($_SESSION['google_oauth_state']);
-    if ($state === '' || $expected === '' || !hash_equals($expected, $state)) {
-        header('Location: ' . app_url() . '/?auth_error=state');
-        exit;
-    }
-    $code = (string)($_GET['code'] ?? '');
-    if ($code === '') {
-        header('Location: ' . app_url() . '/?auth_error=google');
-        exit;
-    }
-    [$status, $token] = curl_form('https://oauth2.googleapis.com/token', [
-        'code' => $code,
-        'client_id' => env_value('GOOGLE_CLIENT_ID'),
-        'client_secret' => env_value('GOOGLE_CLIENT_SECRET'),
-        'redirect_uri' => google_redirect_uri(),
-        'grant_type' => 'authorization_code',
-    ]);
-    if ($status !== 200 || empty($token['access_token'])) {
-        header('Location: ' . app_url() . '/?auth_error=token');
-        exit;
-    }
-    $handle = curl_init('https://openidconnect.googleapis.com/v1/userinfo');
-    curl_setopt_array($handle, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_TIMEOUT => 20,
-        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $token['access_token']],
-    ]);
-    $raw = curl_exec($handle);
-    $userStatus = (int)curl_getinfo($handle, CURLINFO_HTTP_CODE);
-    curl_close($handle);
-    $google = json_decode(is_string($raw) ? $raw : '', true);
-    $email = strtolower(trim((string)($google['email'] ?? '')));
-    $sub = trim((string)($google['sub'] ?? ''));
-    if ($userStatus !== 200 || $sub === '' || empty($google['email_verified']) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        header('Location: ' . app_url() . '/?auth_error=profile');
-        exit;
-    }
-
-    $pdo = db();
-    $statement = $pdo->prepare('SELECT id, google_sub FROM axis_users WHERE email = ? OR google_sub = ? LIMIT 1');
-    $statement->execute([$email, $sub]);
-    $existing = $statement->fetch();
-    if ($existing) {
-        if (!empty($existing['google_sub']) && !hash_equals((string)$existing['google_sub'], $sub)) {
-            header('Location: ' . app_url() . '/?auth_error=account');
-            exit;
-        }
-        $update = $pdo->prepare("UPDATE axis_users SET google_sub = ?, avatar_external_url = COALESCE(NULLIF(avatar_external_url, ''), ?) WHERE id = ?");
-        $update->execute([$sub, (string)($google['picture'] ?? ''), (int)$existing['id']]);
-        $id = (int)$existing['id'];
-    } else {
-        $name = trim((string)($google['name'] ?? strtok($email, '@')));
-        $insert = $pdo->prepare('INSERT INTO axis_users (email, google_sub, display_name, avatar_external_url) VALUES (?, ?, ?, ?)');
-        $insert->execute([$email, $sub, text_slice($name ?: 'Usuário Axis', 80), (string)($google['picture'] ?? '')]);
-        $id = (int)$pdo->lastInsertId();
-    }
-    login_user($id);
-    header('Location: ' . app_url() . '/?auth=google');
-    exit;
-}
-
 $action = (string)($_GET['action'] ?? 'config');
 $method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
-
-if ($action === 'google-callback') google_callback();
 
 if ($action === 'avatar' && $method === 'GET') {
     $id = max(0, (int)($_GET['id'] ?? 0));
@@ -302,7 +223,6 @@ if ($action === 'config' && $method === 'GET') {
         'configured' => auth_configured(),
         'csrf' => csrf_token(),
         'recaptchaSiteKey' => env_value('RECAPTCHA_SITE_KEY'),
-        'googleEnabled' => env_value('GOOGLE_CLIENT_ID') !== '' && env_value('GOOGLE_CLIENT_SECRET') !== '',
     ]);
 }
 
@@ -354,24 +274,6 @@ if ($action === 'login' && $method === 'POST') {
     }
     login_user((int)$user['id']);
     json_response(200, ['ok' => true, 'user' => user_payload(current_user_id()), 'csrf' => csrf_token()]);
-}
-
-if ($action === 'google-start' && $method === 'GET') {
-    if (env_value('GOOGLE_CLIENT_ID') === '' || env_value('GOOGLE_CLIENT_SECRET') === '') {
-        json_response(503, ['error' => 'Login com Google ainda não configurado.']);
-    }
-    $state = bin2hex(random_bytes(24));
-    $_SESSION['google_oauth_state'] = $state;
-    $query = http_build_query([
-        'client_id' => env_value('GOOGLE_CLIENT_ID'),
-        'redirect_uri' => google_redirect_uri(),
-        'response_type' => 'code',
-        'scope' => 'openid profile email',
-        'state' => $state,
-        'prompt' => 'select_account',
-    ]);
-    header('Location: https://accounts.google.com/o/oauth2/v2/auth?' . $query);
-    exit;
 }
 
 if ($action === 'logout' && $method === 'POST') {

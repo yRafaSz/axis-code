@@ -130,6 +130,19 @@ function visible_request(string $content): string {
     return trim((string)($parts[0] ?? $content));
 }
 
+function enforce_direct_answer_style(array $messages): array {
+    $instruction = 'REGRA DE ESTILO OBRIGATÓRIA: responda diretamente ao pedido. Não repita, parafraseie, resuma ou transforme a pergunta do usuário em título ou introdução. Não comece com frases como "Você perguntou", "Seu pedido" ou com um cabeçalho que apenas reproduza o comando. Use títulos somente quando forem úteis para organizar uma resposta extensa, e nunca use a pergunta como título.';
+    foreach ($messages as &$message) {
+        if (($message['role'] ?? '') !== 'system') continue;
+        $message['content'] = rtrim((string)($message['content'] ?? '')) . "\n\n" . $instruction;
+        unset($message);
+        return $messages;
+    }
+    unset($message);
+    array_unshift($messages, ['role' => 'system', 'content' => $instruction]);
+    return $messages;
+}
+
 function is_simple_greeting(string $content): bool {
     return preg_match('~^(?:ol[aá]+|oi+|opa+|e+a[ií]+|hey+|hello+|hi+|bom\s+dia|boa\s+tarde|boa\s+noite)[\s!,.?]*$~iu', visible_request($content)) === 1;
 }
@@ -360,6 +373,7 @@ function chat(): void {
     if ($raw === false || strlen($raw) > 4000000) respond(413, ['error' => 'Pedido grande demais.']);
     $body = json_decode($raw, true);
     if (!is_array($body) || !isset($body['messages']) || !is_array($body['messages'])) respond(400, ['error' => 'Mensagens inválidas.']);
+    $body['messages'] = enforce_direct_answer_style($body['messages']);
     $agents = load_agents();
     if (!$agents) respond(503, ['error' => 'Configure providers.local.php com links e chaves OpenRouter.']);
     $latestRequest = latest_user_content($body['messages']);
@@ -441,7 +455,7 @@ function chat(): void {
     foreach ($candidates as $index => $candidate) $candidateText .= "RESPOSTA " . ($index + 1) . ":\n" . $candidate . "\n\n---\n\n";
     $judgePayload = [
         'messages' => [
-            ['role' => 'system', 'content' => 'Você é o revisor final do Axis Code. Consolide uma única resposta correta, segura, completa e proporcional à complexidade. Compare tecnicamente: não vote, não escolha a resposta mais longa, descarte APIs inventadas, redundância e incompatibilidades, resolva divergências por evidências e preserve os melhores pontos. Mantenha códigos, caminhos e uma única marca [[CONVERSATION_TITLE:...]] quando solicitada. Não mencione candidatos, agentes ou o processo interno.'],
+            ['role' => 'system', 'content' => 'Você é o revisor final do Axis Code. Consolide uma única resposta correta, segura, completa e proporcional à complexidade. Compare tecnicamente: não vote, não escolha a resposta mais longa, descarte APIs inventadas, redundância e incompatibilidades, resolva divergências por evidências e preserve os melhores pontos. Mantenha códigos, caminhos e uma única marca [[CONVERSATION_TITLE:...]] quando solicitada. Não mencione candidatos, agentes ou o processo interno. Responda diretamente: não repita, reformule ou use o pedido original como título ou introdução.'],
             ['role' => 'user', 'content' => "PEDIDO ORIGINAL:\n" . $latest . "\n\nCANDIDATOS:\n" . $candidateText]
         ],
         'temperature' => 0.1,

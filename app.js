@@ -85,6 +85,7 @@ SEGURANÇA E AMBIENTE:
 
 PROTOCOLOS INTERNOS:
 - Quando houver PRIMEIRA_RESPOSTA, gere um título específico de 3 a 7 palavras que resuma o resultado ou a ação técnica principal. Ignore completamente saudações, pedidos de persona como “atue como desenvolvedor”, frases de cortesia, formato de entrega e detalhes secundários. Prefira títulos como “Criar API de Pagamentos”, “Corrigir Autenticação no TiDB” ou “Otimizar Consultas do Relatório”. O título nunca deve copiar o começo do pedido nem conter “quero”, “preciso”, “faça”, “atue como”, “me ajude”, “prompt” ou “solicitação”. Acrescente somente no final: [[CONVERSATION_TITLE:Título criado]]. Não explique a marca.
+- Sempre que criar ou alterar dois ou mais arquivos, identifique cada um com o marcador exato “### Arquivo: caminho/arquivo.ext” e entregue seu conteúdo completo. A interface usará esses marcadores para disponibilizar um único ZIP, sem iniciar download automático.
 - Quando houver MODO AUTO ZIP ATIVO, entregue o conteúdo completo de cada arquivo criado ou alterado e respeite exatamente o marcador de caminho solicitado. Não inclua arquivos não alterados.`;
 
 const translations = {
@@ -96,7 +97,7 @@ const translations = {
     heroKicker: 'ENGENHARIA DE SOFTWARE AUMENTADA', heroTitle: 'Construa além<br/>do <em>óbvio.</em>', heroDescription: 'Um agente técnico que analisa arquitetura, segurança, desempenho e manutenção antes de escrever a primeira linha.',
     buildLabel: 'CONSTRUIR', buildTitle: 'Sistema completo', buildDescription: 'Arquitetura, implementação, banco, segurança, testes e implantação.', diagnoseLabel: 'DIAGNOSTICAR', diagnoseTitle: 'Corrigir com precisão', diagnoseDescription: 'Causa raiz, evidências, regressões e correções prontas para produção.', evolveLabel: 'EVOLUIR', evolveTitle: 'Projeto existente', evolveDescription: 'Novas funcionalidades sem quebrar contratos, dados ou compatibilidade.',
     aiDisclaimer: 'A IA pode cometer erros. Revise o código antes de usar em produção.', account: 'CONTA', myAccount: 'Minha conta', accountDescription: 'Atualize sua foto, nome e senha. O e-mail não pode ser alterado.', changePhoto: 'Alterar foto', photoLimit: 'JPG, PNG, WEBP ou GIF, até 2 MB.', emailImmutable: 'E-mail (não pode ser alterado)', currentPassword: 'Senha atual', newPassword: 'Nova senha', logout: 'Sair da conta', cancel: 'Cancelar', saveChanges: 'Salvar alterações',
-    appearance: 'APARÊNCIA', chooseTheme: 'Escolha um tema', themeDescription: 'Os temas alteram toda a interface. Um fundo personalizado altera somente a conversa.', themeAxis: 'Verde técnico', themeAurora: 'Violeta e ciano', themeMidnight: 'Azul profundo', themeGraphite: 'Cinza minimalista', customBackground: 'Fundo personalizado', customBackgroundDescription: 'Escolha uma imagem de até 2 MB para a área de conversa.', chooseImage: 'Escolher imagem', removeBackground: 'Remover fundo', confirmation: 'CONFIRMAÇÃO', confirm: 'Confirmar', attach: 'Anexar', localTool: 'FERRAMENTA LOCAL', allowMavenTitle: 'Permitir o uso do Maven?', allowMavenDescription: 'A execução só acontecerá desta vez e após sua autorização.', requestedOperation: 'OPERAÇÃO SOLICITADA', mavenFolder: 'Pasta do projeto Maven', mavenFolderHint: 'A pasta precisa conter um arquivo pom.xml.', mavenWarning: 'Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.', deny: 'Não permitir', allowOnce: 'Permitir uma vez', editTitle: 'Editar título', editTitleDescription: 'Use um nome curto e claro para identificar esta conversa.', conversationTitle: 'Título da conversa', saveTitle: 'Salvar título'
+    appearance: 'APARÊNCIA', chooseTheme: 'Escolha um tema', themeDescription: 'Os temas alteram toda a interface. Um fundo personalizado altera somente a conversa.', themeAxis: 'Verde técnico', themeAurora: 'Violeta e ciano', themeMidnight: 'Azul profundo', themeGraphite: 'Cinza minimalista', dynamicParticles: 'Partículas dinâmicas', dynamicParticlesDescription: 'Movimento suave seguindo o cursor, com cores adaptadas ao tema.', particlesOn: 'Ativadas', particlesOff: 'Desativadas', customBackground: 'Fundo personalizado', customBackgroundDescription: 'Escolha uma imagem de até 2 MB para a área de conversa.', chooseImage: 'Escolher imagem', removeBackground: 'Remover fundo', confirmation: 'CONFIRMAÇÃO', confirm: 'Confirmar', attach: 'Anexar', localTool: 'FERRAMENTA LOCAL', allowMavenTitle: 'Permitir o uso do Maven?', allowMavenDescription: 'A execução só acontecerá desta vez e após sua autorização.', requestedOperation: 'OPERAÇÃO SOLICITADA', mavenFolder: 'Pasta do projeto Maven', mavenFolderHint: 'A pasta precisa conter um arquivo pom.xml.', mavenWarning: 'Projetos Maven podem executar plugins e código durante o build. Autorize somente projetos em que você confia.', deny: 'Não permitir', allowOnce: 'Permitir uma vez', editTitle: 'Editar título', editTitleDescription: 'Use um nome curto e claro para identificar esta conversa.', conversationTitle: 'Título da conversa', saveTitle: 'Salvar título'
   },
   en: {
     language: 'Language', authHeadline: 'Your professional coding environment.', authDescription: 'Sign in to access your conversations, preferences, and AI software engineering tools.',
@@ -106,7 +107,7 @@ const translations = {
     heroKicker: 'AUGMENTED SOFTWARE ENGINEERING', heroTitle: 'Build beyond<br/>the <em>obvious.</em>', heroDescription: 'A technical agent that considers architecture, security, performance, and maintenance before writing the first line.',
     buildLabel: 'BUILD', buildTitle: 'Complete system', buildDescription: 'Architecture, implementation, database, security, tests, and deployment.', diagnoseLabel: 'DIAGNOSE', diagnoseTitle: 'Fix precisely', diagnoseDescription: 'Root cause, evidence, regressions, and production-ready fixes.', evolveLabel: 'EVOLVE', evolveTitle: 'Existing project', evolveDescription: 'New features without breaking contracts, data, or compatibility.',
     aiDisclaimer: 'AI can make mistakes. Review code before using it in production.', account: 'ACCOUNT', myAccount: 'My account', accountDescription: 'Update your photo, name, and password. Email cannot be changed.', changePhoto: 'Change photo', photoLimit: 'JPG, PNG, WEBP, or GIF, up to 2 MB.', emailImmutable: 'Email (cannot be changed)', currentPassword: 'Current password', newPassword: 'New password', logout: 'Sign out', cancel: 'Cancel', saveChanges: 'Save changes',
-    appearance: 'APPEARANCE', chooseTheme: 'Choose a theme', themeDescription: 'Themes change the entire interface. A custom background changes only the conversation area.', themeAxis: 'Technical green', themeAurora: 'Violet and cyan', themeMidnight: 'Deep blue', themeGraphite: 'Minimal graphite', customBackground: 'Custom background', customBackgroundDescription: 'Choose an image up to 2 MB for the conversation area.', chooseImage: 'Choose image', removeBackground: 'Remove background', confirmation: 'CONFIRMATION', confirm: 'Confirm', attach: 'Attach', localTool: 'LOCAL TOOL', allowMavenTitle: 'Allow Maven usage?', allowMavenDescription: 'Execution will only happen this time and after your approval.', requestedOperation: 'REQUESTED OPERATION', mavenFolder: 'Maven project folder', mavenFolderHint: 'The folder must contain a pom.xml file.', mavenWarning: 'Maven projects can run plugins and code during the build. Only approve projects you trust.', deny: 'Deny', allowOnce: 'Allow once', editTitle: 'Edit title', editTitleDescription: 'Use a short and clear name to identify this conversation.', conversationTitle: 'Conversation title', saveTitle: 'Save title'
+    appearance: 'APPEARANCE', chooseTheme: 'Choose a theme', themeDescription: 'Themes change the entire interface. A custom background changes only the conversation area.', themeAxis: 'Technical green', themeAurora: 'Violet and cyan', themeMidnight: 'Deep blue', themeGraphite: 'Minimal graphite', dynamicParticles: 'Dynamic particles', dynamicParticlesDescription: 'Smooth cursor-following motion with colors adapted to the theme.', particlesOn: 'Enabled', particlesOff: 'Disabled', customBackground: 'Custom background', customBackgroundDescription: 'Choose an image up to 2 MB for the conversation area.', chooseImage: 'Choose image', removeBackground: 'Remove background', confirmation: 'CONFIRMATION', confirm: 'Confirm', attach: 'Attach', localTool: 'LOCAL TOOL', allowMavenTitle: 'Allow Maven usage?', allowMavenDescription: 'Execution will only happen this time and after your approval.', requestedOperation: 'REQUESTED OPERATION', mavenFolder: 'Maven project folder', mavenFolderHint: 'The folder must contain a pom.xml file.', mavenWarning: 'Maven projects can run plugins and code during the build. Only approve projects you trust.', deny: 'Deny', allowOnce: 'Allow once', editTitle: 'Edit title', editTitleDescription: 'Use a short and clear name to identify this conversation.', conversationTitle: 'Conversation title', saveTitle: 'Save title'
   }
 };
 
@@ -195,8 +196,15 @@ function progressPlan(requestText) {
 }
 
 function loadPreferences() {
-  const defaults = { autoZip: false, language: 'pt-BR', theme: 'axis', chatBackground: '' };
-  try { return { ...defaults, ...JSON.parse(localStorage.getItem('axis-preferences')) }; }
+  const defaults = { autoZip: true, zipBehaviorVersion: 2, particles: true, language: 'pt-BR', theme: 'axis', chatBackground: '' };
+  try {
+    const saved = JSON.parse(localStorage.getItem('axis-preferences')) || {};
+    if (saved.zipBehaviorVersion !== 2) {
+      saved.autoZip = true;
+      saved.zipBehaviorVersion = 2;
+    }
+    return { ...defaults, ...saved };
+  }
   catch { return defaults; }
 }
 
@@ -222,8 +230,18 @@ const els = {
   empty: $('#emptyState'), messages: $('#messages'), chatArea: $('#chatArea'),
   input: $('#promptInput'), form: $('#promptForm'), send: $('#sendButton'),
   charCount: $('#charCount'), fileInput: $('#fileInput'), attachmentList: $('#attachmentList'), toast: $('#toast'),
-  sidebar: $('#sidebar'), scrollBottom: $('#scrollBottom')
+  sidebar: $('#sidebar'), sidebarScrim: $('#sidebarScrim'), scrollBottom: $('#scrollBottom'), particleCanvas: $('#particleCanvas')
 };
+
+function setSidebarOpen(open, restoreFocus = false) {
+  const shouldOpen = Boolean(open) && window.matchMedia('(max-width: 900px)').matches;
+  els.sidebar.classList.toggle('open', shouldOpen);
+  els.sidebarScrim.hidden = !shouldOpen;
+  document.body.classList.toggle('sidebar-open', shouldOpen);
+  $('#menuButton').setAttribute('aria-expanded', String(shouldOpen));
+  if (shouldOpen) requestAnimationFrame(() => $('#sidebarClose').focus());
+  else if (restoreFocus) $('#menuButton').focus();
+}
 
 let pendingMavenRequest = null;
 
@@ -347,6 +365,7 @@ function applyLanguage(language) {
   document.title = state.preferences.language === 'en' ? 'Axis Code — AI software engineering' : 'Axis Code — Engenharia de software com IA';
   savePreferences();
   renderHistory();
+  updateParticleToggleUI();
 }
 
 function applyTheme() {
@@ -359,6 +378,214 @@ function applyTheme() {
     document.documentElement.style.removeProperty('--custom-chat-background');
     els.chatArea.classList.remove('has-custom-background');
   }
+  updateParticleTheme();
+}
+
+const particlePalettes = {
+  axis: ['154,252,190', '95,230,154', '224,255,237'],
+  aurora: ['168,139,255', '101,234,255', '241,206,255'],
+  midnight: ['112,183,255', '79,225,209', '196,222,255'],
+  graphite: ['216,221,226', '151,161,171', '245,247,249'],
+  custom: ['245,240,220', '154,252,190', '255,196,122']
+};
+
+const particleEngine = {
+  context: null,
+  frame: 0,
+  lastTime: 0,
+  width: 0,
+  height: 0,
+  dpr: 1,
+  particles: [],
+  sprites: [],
+  paletteKey: '',
+  pointer: { x: 0, y: 0, targetX: 0, targetY: 0, active: false },
+  resizeObserver: null,
+  reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)')
+};
+
+function selectedParticlePalette() {
+  if (state.preferences.chatBackground) return 'custom';
+  return particlePalettes[state.preferences.theme] ? state.preferences.theme : 'axis';
+}
+
+function particleSprite(rgb) {
+  const sprite = document.createElement('canvas');
+  sprite.width = 40;
+  sprite.height = 40;
+  const context = sprite.getContext('2d');
+  const glow = context.createRadialGradient(15, 12, 1, 20, 20, 19);
+  glow.addColorStop(0, 'rgba(255,255,255,.98)');
+  glow.addColorStop(.12, `rgba(${rgb},.96)`);
+  glow.addColorStop(.42, `rgba(${rgb},.38)`);
+  glow.addColorStop(1, `rgba(${rgb},0)`);
+  context.fillStyle = glow;
+  context.fillRect(0, 0, 40, 40);
+  return sprite;
+}
+
+function seedParticles() {
+  if (!particleEngine.width || !particleEngine.height) return;
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  const count = coarse ? 13 : Math.min(34, Math.max(18, Math.round((particleEngine.width * particleEngine.height) / 36000)));
+  particleEngine.particles = Array.from({ length: count }, (_, index) => ({
+    x: Math.random() * particleEngine.width,
+    y: Math.random() * particleEngine.height,
+    vx: (Math.random() - .5) * .13,
+    vy: -.025 - Math.random() * .11,
+    depth: .35 + Math.random() * .9,
+    radius: 1.2 + Math.random() * 2.2,
+    phase: Math.random() * Math.PI * 2,
+    sprite: index % particleEngine.sprites.length
+  }));
+}
+
+function resizeParticleCanvas() {
+  if (!particleEngine.context || !els.particleCanvas) return;
+  const rect = els.chatArea.getBoundingClientRect();
+  const width = Math.max(0, Math.round(rect.width));
+  const height = Math.max(0, Math.round(rect.height));
+  els.particleCanvas.style.left = `${Math.round(rect.left)}px`;
+  els.particleCanvas.style.top = `${Math.round(rect.top)}px`;
+  els.particleCanvas.style.width = `${width}px`;
+  els.particleCanvas.style.height = `${height}px`;
+  if (!width || !height) return;
+  const changed = width !== particleEngine.width || height !== particleEngine.height;
+  particleEngine.width = width;
+  particleEngine.height = height;
+  particleEngine.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  els.particleCanvas.width = Math.round(width * particleEngine.dpr);
+  els.particleCanvas.height = Math.round(height * particleEngine.dpr);
+  particleEngine.context.setTransform(particleEngine.dpr, 0, 0, particleEngine.dpr, 0, 0);
+  if (changed || !particleEngine.particles.length) {
+    particleEngine.pointer.x = particleEngine.pointer.targetX = width / 2;
+    particleEngine.pointer.y = particleEngine.pointer.targetY = height / 2;
+    seedParticles();
+  }
+}
+
+function renderParticleFrame(time) {
+  if (!state.preferences.particles || particleEngine.reducedMotion.matches || document.hidden) {
+    particleEngine.frame = 0;
+    return;
+  }
+  const context = particleEngine.context;
+  const width = particleEngine.width;
+  const height = particleEngine.height;
+  if (!context || !width || !height) {
+    particleEngine.frame = requestAnimationFrame(renderParticleFrame);
+    return;
+  }
+  const delta = Math.min(2, Math.max(.25, particleEngine.lastTime ? (time - particleEngine.lastTime) / 16.67 : 1));
+  particleEngine.lastTime = time;
+  const pointer = particleEngine.pointer;
+  pointer.x += (pointer.targetX - pointer.x) * .075;
+  pointer.y += (pointer.targetY - pointer.y) * .075;
+  context.clearRect(0, 0, width, height);
+
+  const positions = [];
+  for (const particle of particleEngine.particles) {
+    particle.phase += .006 * delta;
+    particle.x += (particle.vx + Math.sin(particle.phase) * .018) * delta;
+    particle.y += particle.vy * delta;
+    if (particle.x < -30) particle.x = width + 30;
+    if (particle.x > width + 30) particle.x = -30;
+    if (particle.y < -30) particle.y = height + 30;
+    const parallaxX = pointer.active ? (pointer.x - width / 2) * .014 * particle.depth : 0;
+    const parallaxY = pointer.active ? (pointer.y - height / 2) * .01 * particle.depth : 0;
+    let drawX = particle.x + parallaxX;
+    let drawY = particle.y + parallaxY;
+    if (pointer.active) {
+      const dx = drawX - pointer.x;
+      const dy = drawY - pointer.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      if (distance < 125) {
+        const force = (1 - distance / 125) * 10 * particle.depth;
+        drawX += (dx / distance) * force;
+        drawY += (dy / distance) * force;
+      }
+    }
+    positions.push({ x: drawX, y: drawY, depth: particle.depth });
+  }
+
+  const lineRgb = particlePalettes[particleEngine.paletteKey]?.[0] || particlePalettes.axis[0];
+  context.lineWidth = .55;
+  for (let i = 0; i < positions.length; i++) {
+    for (let j = i + 1; j < positions.length; j++) {
+      const dx = positions[i].x - positions[j].x;
+      const dy = positions[i].y - positions[j].y;
+      const distance = Math.hypot(dx, dy);
+      if (distance > 92) continue;
+      context.strokeStyle = `rgba(${lineRgb},${(1 - distance / 92) * .055})`;
+      context.beginPath();
+      context.moveTo(positions[i].x, positions[i].y);
+      context.lineTo(positions[j].x, positions[j].y);
+      context.stroke();
+    }
+  }
+
+  particleEngine.particles.forEach((particle, index) => {
+    const position = positions[index];
+    const size = (10 + particle.radius * 5) * particle.depth;
+    context.globalAlpha = .28 + particle.depth * .28;
+    context.drawImage(particleEngine.sprites[particle.sprite], position.x - size / 2, position.y - size / 2, size, size);
+  });
+  context.globalAlpha = 1;
+  particleEngine.frame = requestAnimationFrame(renderParticleFrame);
+}
+
+function startParticleAnimation() {
+  cancelAnimationFrame(particleEngine.frame);
+  particleEngine.frame = 0;
+  particleEngine.lastTime = 0;
+  const enabled = Boolean(state.preferences.particles) && !particleEngine.reducedMotion.matches;
+  els.particleCanvas.classList.toggle('active', enabled);
+  if (!enabled) {
+    particleEngine.context?.clearRect(0, 0, particleEngine.width, particleEngine.height);
+    return;
+  }
+  resizeParticleCanvas();
+  particleEngine.frame = requestAnimationFrame(renderParticleFrame);
+}
+
+function updateParticleToggleUI() {
+  const button = $('#particleToggle');
+  if (!button) return;
+  const enabled = Boolean(state.preferences.particles);
+  button.classList.toggle('active', enabled);
+  button.setAttribute('aria-pressed', String(enabled));
+  $('#particleStatus').textContent = enabled ? t('particlesOn') : t('particlesOff');
+}
+
+function updateParticleTheme() {
+  if (!particleEngine.context) return;
+  particleEngine.paletteKey = selectedParticlePalette();
+  particleEngine.sprites = particlePalettes[particleEngine.paletteKey].map(particleSprite);
+  $$('.particle-palettes i').forEach(item => item.classList.toggle('active', item.classList.contains(particleEngine.paletteKey)));
+  seedParticles();
+  updateParticleToggleUI();
+  startParticleAnimation();
+}
+
+function initializeParticles() {
+  if (!els.particleCanvas?.getContext) return;
+  particleEngine.context = els.particleCanvas.getContext('2d', { alpha: true });
+  if (!particleEngine.context) return;
+  if ('ResizeObserver' in window) {
+    particleEngine.resizeObserver = new ResizeObserver(resizeParticleCanvas);
+    particleEngine.resizeObserver.observe(els.chatArea);
+  }
+  els.chatArea.addEventListener('pointermove', event => {
+    const rect = els.chatArea.getBoundingClientRect();
+    particleEngine.pointer.targetX = event.clientX - rect.left;
+    particleEngine.pointer.targetY = event.clientY - rect.top;
+    particleEngine.pointer.active = true;
+  }, { passive: true });
+  els.chatArea.addEventListener('pointerleave', () => { particleEngine.pointer.active = false; }, { passive: true });
+  document.addEventListener('visibilitychange', startParticleAnimation);
+  if (particleEngine.reducedMotion.addEventListener) particleEngine.reducedMotion.addEventListener('change', startParticleAnimation);
+  else particleEngine.reducedMotion.addListener?.(startParticleAnimation);
+  updateParticleTheme();
 }
 
 async function authRequest(action, { method = 'GET', body = null, formData = null } = {}) {
@@ -905,7 +1132,7 @@ function loadConversation(id) {
   record.messages.forEach(message => addMessage(message.role, message.displayContent || message.content, false, message.generation));
   els.empty.style.display = record.messages.length ? 'none' : '';
   els.messages.classList.toggle('active', record.messages.length > 0);
-  els.sidebar.classList.remove('open');
+  setSidebarOpen(false);
   scrollToLatest('auto');
 }
 
@@ -941,9 +1168,9 @@ function cleanMarkdownArtifacts(text) {
   return String(text || '').split('```').map((part, index) => {
     if (index % 2 === 1) return part;
     return part
-      .replace(/^\s*(#{1,6})\s*\n+\s*((?:Arquivo|File|Caminho|Path)\s*:)/gimu, '$1 $2')
-      .replace(/^\s*(?:#\s*){2,6}(?=(?:Arquivo|File|Caminho|Path)\s*:)/gimu, '### ')
-      .replace(/^\s*(?:#\s*){1,6}$/gm, '')
+      .replace(/^[\t ]*(#{1,6})[\t ]*\n+[\t ]*((?:Arquivo|File|Caminho|Path)\s*:)/gimu, '$1 $2')
+      .replace(/^[\t ]*(?:#[\t ]*){2,6}(?=(?:Arquivo|File|Caminho|Path)\s*:)/gimu, '### ')
+      .replace(/^[\t ]*(?:#[\t ]*){1,6}[\t ]*$/gm, '')
       .replace(/\n{3,}/g, '\n\n');
   }).join('```');
 }
@@ -1102,7 +1329,7 @@ function extractGeneratedFiles(text) {
     files.push({ name: uniqueName, content: match[2].replace(/\r?\n$/, ''), explicitName });
   }
   const explicitlyNamed = files.filter(file => file.explicitName);
-  return (explicitlyNamed.length ? explicitlyNamed : files).map(({ name, content }) => ({ name, content }));
+  return (explicitlyNamed.length ? explicitlyNamed : files).map(({ name, content, explicitName }) => ({ name, content, explicitName }));
 }
 
 const crcTable = (() => {
@@ -1149,17 +1376,15 @@ function makeZip(files) {
 }
 
 function addZipDownload(messageNode, answer) {
-  const files = extractGeneratedFiles(answer);
+  const files = extractGeneratedFiles(answer).filter(file => file.explicitName);
   const content = messageNode.querySelector('.message-content');
-  if (!files.length) {
-    const warning = document.createElement('div');
-    warning.className = 'zip-warning';
-    warning.textContent = 'Auto ZIP estava ativo, mas a resposta não trouxe nenhum arquivo completo para compactar.';
-    content.appendChild(warning);
-    return;
-  }
+  content.querySelector('.zip-ready')?.remove();
+  if (files.length < 2) return false;
   const blob = makeZip(files);
-  const filename = `axis-arquivos-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.zip`;
+  const titleSlug = (state.conversationTitle || 'projeto-axis')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'projeto-axis';
+  const filename = `${titleSlug}.zip`;
   const download = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -1169,18 +1394,21 @@ function addZipDownload(messageNode, answer) {
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
+    button.classList.add('downloaded');
+    button.querySelector('.zip-button-title').textContent = state.preferences.language === 'en' ? 'ZIP downloaded' : 'ZIP baixado';
+    showToast(state.preferences.language === 'en' ? `ZIP downloaded with ${files.length} files` : `ZIP baixado com ${files.length} arquivos`);
   };
   const box = document.createElement('div');
   box.className = 'zip-ready';
-  box.innerHTML = `<p>ZIP preparado com ${files.length} arquivo(s) alterado(s).</p>`;
+  box.innerHTML = `<div class="zip-ready-info"><span class="zip-package-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM4 7.5l8 4.5 8-4.5M12 12v9M9 5h6M9 8h6"/></svg></span><span><strong>${state.preferences.language === 'en' ? 'Project package ready' : 'Pacote do projeto pronto'}</strong><small>${files.length} ${state.preferences.language === 'en' ? 'complete files' : 'arquivos completos'} • ${formatBytes(blob.size)}</small></span></div>`;
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'zip-download';
-  button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Baixar arquivos alterados (.zip)';
+  button.innerHTML = `<span class="zip-button-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></span><span><strong class="zip-button-title">${state.preferences.language === 'en' ? 'Download project' : 'Baixar projeto'}</strong><small>${state.preferences.language === 'en' ? 'ZIP file — click to save' : 'Arquivo ZIP — clique para salvar'}</small></span><svg class="zip-button-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg>`;
   button.addEventListener('click', download);
   box.appendChild(button);
   content.appendChild(box);
-  setTimeout(() => { download(); showToast(`ZIP gerado com ${files.length} arquivo(s)`); }, 180);
+  return true;
 }
 
 function addMessage(role, content, typing = false, generation = null) {
@@ -1196,6 +1424,7 @@ function addMessage(role, content, typing = false, generation = null) {
   if (role === 'user') setAvatar(avatar, state.auth.user);
   else setAxisAvatar(avatar);
   els.messages.appendChild(node);
+  if (role === 'assistant' && !typing && state.preferences.autoZip) addZipDownload(node, content);
   scrollToLatest('smooth');
   return node;
 }
@@ -1331,7 +1560,7 @@ function resetChat(saveExisting = true, persistNew = false) {
   els.input.focus();
   if (persistNew) saveCurrentConversation(true);
   renderHistory();
-  els.sidebar.classList.remove('open');
+  setSidebarOpen(false);
   els.chatArea.scrollTo({ top: 0, behavior: 'auto' });
 }
 
@@ -1370,7 +1599,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (!$('#confirmModal').hidden) finishConfirmation(false);
     else if (!$('#mavenPermissionModal').hidden) closeMavenPermission();
-    else $$('.modal-backdrop:not([hidden])').forEach(modal => { modal.hidden = true; });
+    else if ($$('.modal-backdrop:not([hidden])').length) $$('.modal-backdrop:not([hidden])').forEach(modal => { modal.hidden = true; });
+    else if (els.sidebar.classList.contains('open')) setSidebarOpen(false, true);
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); createNewChat(); }
 });
@@ -1394,12 +1624,12 @@ $('.nav-item[data-view="chat"]').addEventListener('click', e => {
   $$('.nav-item').forEach(item => item.classList.remove('active'));
   e.currentTarget.classList.add('active');
   els.input.focus();
-  els.sidebar.classList.remove('open');
+  setSidebarOpen(false);
 });
 $$('[data-workflow]').forEach(button => button.addEventListener('click', () => {
   $$('.nav-item').forEach(item => item.classList.remove('active'));
   button.classList.add('active');
-  els.sidebar.classList.remove('open');
+  setSidebarOpen(false);
   applyPrePrompt(button.dataset.prompt, `${button.textContent.trim()} selecionado`);
 }));
 $('#autoZipToggle').addEventListener('click', e => {
@@ -1661,6 +1891,12 @@ $$('[data-theme-choice]').forEach(card => card.addEventListener('click', () => {
   savePreferences();
   applyTheme();
 }));
+$('#particleToggle').addEventListener('click', () => {
+  state.preferences.particles = !state.preferences.particles;
+  savePreferences();
+  updateParticleToggleUI();
+  startParticleAnimation();
+});
 $('#backgroundInput').addEventListener('change', event => {
   const file = event.target.files[0];
   if (!file) return;
@@ -1685,14 +1921,32 @@ $('#removeBackground').addEventListener('click', () => {
   applyTheme();
 });
 
-$('#menuButton').addEventListener('click', () => els.sidebar.classList.add('open'));
-$('#sidebarClose').addEventListener('click', () => els.sidebar.classList.remove('open'));
+$('#menuButton').addEventListener('click', () => setSidebarOpen(true));
+$('#sidebarClose').addEventListener('click', () => setSidebarOpen(false, true));
+els.sidebarScrim.addEventListener('click', () => setSidebarOpen(false, true));
 els.chatArea.addEventListener('scroll', updateScrollButton, { passive: true });
 els.scrollBottom.addEventListener('click', () => scrollToLatest('smooth'));
-window.addEventListener('resize', () => { positionScrollButton(); scrollToLatest('auto'); });
 
+function syncMobileViewport() {
+  const viewportHeight = Math.round(window.visualViewport?.height || window.innerHeight);
+  document.documentElement.style.setProperty('--app-height', `${viewportHeight}px`);
+  if (!window.matchMedia('(max-width: 900px)').matches) setSidebarOpen(false);
+  positionScrollButton();
+  resizeParticleCanvas();
+}
+
+window.addEventListener('resize', syncMobileViewport, { passive: true });
+window.addEventListener('orientationchange', () => setTimeout(syncMobileViewport, 120), { passive: true });
+window.visualViewport?.addEventListener('resize', syncMobileViewport, { passive: true });
+els.input.addEventListener('focus', () => setTimeout(() => {
+  syncMobileViewport();
+  scrollToLatest('smooth');
+}, 180));
+
+initializeParticles();
 applyLanguage(state.preferences.language);
 applyTheme();
+syncMobileViewport();
 $('#autoZipToggle').classList.toggle('active-tool', state.preferences.autoZip);
 $('#autoZipToggle').setAttribute('aria-pressed', String(state.preferences.autoZip));
 $('#autoZipToggle').title = state.preferences.autoZip ? 'Auto ZIP ligado — clique para desativar' : 'Auto ZIP desligado — clique para ativar';

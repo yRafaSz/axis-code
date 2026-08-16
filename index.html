@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#07110f" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="axis-preview.png" />
   <title>Axis Code — Engenharia de software com IA</title>
   <meta name="description" content="Assistente de programação com IA, foco em Java e suporte a múltiplas linguagens." />
-    <link rel="stylesheet" href="styles.css?v=12.7" />
+    <link rel="stylesheet" href="styles.css?v=12.9" />
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -113,10 +113,11 @@
         </button>
       </div>
     </aside>
+    <button class="sidebar-scrim" id="sidebarScrim" type="button" aria-label="Fechar menu" hidden></button>
 
     <main class="main-stage">
       <header class="topbar">
-        <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
         <div class="ai-counter" id="aiCounter" title="Estado das IAs internas">
@@ -133,6 +134,7 @@
       </header>
 
       <section class="chat-area" id="chatArea">
+        <canvas class="particle-canvas" id="particleCanvas" aria-hidden="true"></canvas>
         <div class="empty-state" id="emptyState">
           <div class="hero-kicker"><span></span> <b data-i18n="heroKicker">ENGENHARIA DE SOFTWARE AUMENTADA</b></div>
           <h1 data-i18n-html="heroTitle">Construa além<br/>do <em>óbvio.</em></h1>
@@ -240,6 +242,14 @@
         <button type="button" class="theme-card" data-theme-choice="midnight"><i class="theme-preview midnight"></i><strong>Midnight</strong><small data-i18n="themeMidnight">Azul profundo</small></button>
         <button type="button" class="theme-card" data-theme-choice="graphite"><i class="theme-preview graphite"></i><strong>Graphite</strong><small data-i18n="themeGraphite">Cinza minimalista</small></button>
       </div>
+      <section class="particle-settings" aria-labelledby="particleSettingsTitle">
+        <div class="particle-settings-copy">
+          <span class="particle-emblem" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong id="particleSettingsTitle" data-i18n="dynamicParticles">Partículas dinâmicas</strong><small data-i18n="dynamicParticlesDescription">Movimento suave seguindo o cursor, com cores adaptadas ao tema.</small></span>
+        </div>
+        <button class="particle-switch" id="particleToggle" type="button" aria-pressed="true"><span id="particleStatus" data-i18n="particlesOn">Ativadas</span><span class="toggle-track"><i></i></span></button>
+        <div class="particle-palettes" aria-label="Paletas automáticas"><i class="axis" title="Axis"></i><i class="aurora" title="Aurora"></i><i class="midnight" title="Midnight"></i><i class="graphite" title="Graphite"></i><i class="custom" title="Fundo personalizado"></i></div>
+      </section>
       <div class="custom-background"><div><strong data-i18n="customBackground">Fundo personalizado</strong><small data-i18n="customBackgroundDescription">Escolha uma imagem de até 2 MB para a área de conversa.</small></div><label class="secondary-button"><span data-i18n="chooseImage">Escolher imagem</span><input id="backgroundInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden /></label><button type="button" class="secondary-button" id="removeBackground" data-i18n="removeBackground">Remover fundo</button></div>
     </section>
   </div>
@@ -265,6 +275,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-    <script src="app.js?v=12.7"></script>
+    <script src="app.js?v=12.9"></script>
 </body>
 </html>
